@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="dd156c66-9f3e-43a3-9ca1-ee4594a1079f"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics=""><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#F7F1E3"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><title>Market List</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><style>/* vietnamese */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("3d16de61-96bf-4b22-94a6-5b4284e2a877") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("234a48f4-0c6f-43b2-9d58-df518cd98e8e") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("d8174b3e-3002-4e39-a814-ebccf5ecafcd") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("3d16de61-96bf-4b22-94a6-5b4284e2a877") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("234a48f4-0c6f-43b2-9d58-df518cd98e8e") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("d8174b3e-3002-4e39-a814-ebccf5ecafcd") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("3d16de61-96bf-4b22-94a6-5b4284e2a877") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("234a48f4-0c6f-43b2-9d58-df518cd98e8e") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("d8174b3e-3002-4e39-a814-ebccf5ecafcd") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("3d16de61-96bf-4b22-94a6-5b4284e2a877") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("234a48f4-0c6f-43b2-9d58-df518cd98e8e") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("d8174b3e-3002-4e39-a814-ebccf5ecafcd") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Bebas Neue';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("720390da-324f-41a6-bb8b-a837678f71d9") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Bebas Neue';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("4e0211ca-0f6b-4d1f-9411-5be561ab3ece") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style><style>html,body{margin:0;height:100%;overflow:hidden;background:#F7F1E3;font-family:Archivo,system-ui,sans-serif;overscroll-behavior:none}a{color:#B93A26;text-decoration:none}a:hover{color:#8E2C1C}input,textarea,button{font-family:Archivo,system-ui,sans-serif}input:focus,textarea:focus{outline:none}*{-webkit-tap-highlight-color:transparent}</style></helmet>
+
+<div style="position:fixed;inset:0;background:#F7F1E3;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom) 0;box-sizing:border-box">
+<div style="height:100%;display:flex;flex-direction:column;position:relative;background:#F7F1E3;overflow:hidden">
+
+<sc-if value="{{ shopping }}">
+<div style="height:100%;display:flex;flex-direction:column;background:#F7F1E3">
+<div style="flex:none;padding:12px 16px 13px;background:#1A1712;display:flex;flex-direction:column;gap:11px">
+<div style="display:flex;align-items:center;gap:10px">
+<div sc-camel-on-click="{{ exitShop }}" style="flex:none;width:46px;height:46px;margin-left:-8px;border-radius:999px;display:flex;align-items:center;justify-content:center;cursor:pointer">
+<svg width="24" height="24" sc-camel-view-box="0 0 24 24" fill="none" stroke="#F7F1E3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg>
+</div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+<div style="font:500 10px/1 Archivo,sans-serif;letter-spacing:0.16em;text-transform:uppercase;color:rgba(247,241,227,0.5)">In the store</div>
+<div style="font-family:'Bebas Neue',sans-serif;font-size:30px;line-height:1.05;letter-spacing:0.02em;color:#F7F1E3">{{ shopHead }}</div>
+</div>
+<div style="flex:none;text-align:right;display:flex;flex-direction:column;gap:1px">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1;color:#D3A32E">{{ cartTotal }}</div>
+<div style="font:500 9px/1 Archivo,sans-serif;letter-spacing:0.12em;text-transform:uppercase;color:rgba(247,241,227,0.45)">in cart</div>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:5px">
+<div style="height:8px;border-radius:999px;background:rgba(247,241,227,0.16);overflow:hidden">
+<div style="height:100%;background:#D3A32E;border-radius:999px;transition:width .35s ease;width:{{ shopPct }};"></div>
+</div>
+<div style="display:flex;justify-content:space-between;gap:8px">
+<div style="font:600 10px/1 Archivo,sans-serif;letter-spacing:0.1em;text-transform:uppercase;color:rgba(247,241,227,0.5)">{{ shopPct }} done</div>
+<div style="font:600 10px/1 Archivo,sans-serif;letter-spacing:0.1em;text-transform:uppercase;color:rgba(247,241,227,0.5)">{{ estTotal }} est. full list</div>
+</div>
+</div>
+</div>
+<div style="flex:1;overflow:auto;padding-bottom:8px">
+<sc-for list="{{ shopGroups }}" as="g" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column">
+<div style="display:flex;align-items:center;gap:8px;padding:15px 16px 7px;opacity:{{ g.dim }};">
+<div style="flex:none;display:flex;align-items:center">{{ g.icon }}</div>
+<div style="font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:0.05em;color:#1A1712">{{ g.name }}</div>
+<div style="flex:1;height:2px;background:rgba(26,23,18,0.14)"></div>
+<div style="font:600 11px/1 Archivo,sans-serif;font-variant-numeric:tabular-nums;color:rgba(26,23,18,0.4)">{{ g.tally }}</div>
+</div>
+<sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+<div sc-camel-on-click="{{ it.toggle }}" style="display:flex;align-items:center;gap:13px;padding:13px 16px;border-top:1px solid rgba(26,23,18,0.08);cursor:pointer;background:#FFFDF6;opacity:{{ it.fade }};">
+<div style="width:27px;height:27px;flex:none;border-radius:7px;display:flex;align-items:center;justify-content:center;border:2px solid;background:{{ it.boxBg }};border-color:{{ it.boxBorder }};">
+<sc-if value="{{ it.checked }}">
+<svg width="15" height="15" sc-camel-view-box="0 0 16 16" fill="none"><path d="M3 8.6l3.2 3.2L13 4.8" stroke="#F7F1E3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</sc-if>
+</div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+<div style="font:500 16px/1.25 Archivo,sans-serif;color:#1A1712;text-decoration:{{ it.strike }};">{{ it.name }}</div>
+<sc-if value="{{ it.from }}">
+<div style="font:500 10px/1 Archivo,sans-serif;letter-spacing:0.1em;text-transform:uppercase;color:#2E6B4E">{{ it.from }}</div>
+</sc-if>
+</div>
+<div style="flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+<div style="padding:5px 9px;border:1.5px solid rgba(26,23,18,0.2);border-radius:5px;font:600 12px/1 Archivo,sans-serif;font-variant-numeric:tabular-nums;color:#1A1712">{{ it.qtyLabel }}</div>
+<div style="font:600 10px/1 Archivo,sans-serif;font-variant-numeric:tabular-nums;color:rgba(26,23,18,0.42)">{{ it.priceLabel }}</div>
+</div>
+</div>
+</sc-for>
+</div>
+</sc-for>
+<div style="padding:20px 16px 10px;display:flex;flex-direction:column;gap:9px">
+<div sc-camel-on-click="{{ finishShop }}" style="padding:16px;border-radius:12px;background:#2E6B4E;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:0.06em;color:#F7F1E3;cursor:pointer">{{ finishLabel }}</div>
+<div style="font:400 12px/1.5 Archivo,sans-serif;color:rgba(26,23,18,0.45);text-align:center">Removes everything checked and keeps the rest for next time.</div>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ notShopping }}" hint-placeholder-val="{{ true }}">
+<div style="height:100%;display:flex;flex-direction:column">
+
+<div style="flex:none;border-bottom:3px solid #1A1712">
+<div style="padding:10px 16px 11px;display:flex;align-items:flex-end;justify-content:space-between;gap:10px">
+<div style="display:flex;flex-direction:column;gap:2px;min-width:0">
+<div style="font:500 10px/1 Archivo,sans-serif;letter-spacing:0.16em;text-transform:uppercase;color:rgba(26,23,18,0.45)">{{ headKicker }}</div>
+<div style="font-family:'Bebas Neue',sans-serif;font-size:36px;line-height:1;letter-spacing:0.02em;color:#1A1712">{{ headTitle }}</div>
+</div>
+<div style="flex:none;display:flex;gap:7px;align-items:center">
+<sc-if value="{{ tabList }}" hint-placeholder-val="{{ true }}">
+<div sc-camel-on-click="{{ openListMenu }}" style="width:42px;height:42px;border-radius:999px;border:1.5px solid rgba(26,23,18,0.22);display:flex;align-items:center;justify-content:center;gap:3px;cursor:pointer">
+<div style="width:3.5px;height:3.5px;border-radius:9px;background:#1A1712"></div>
+<div style="width:3.5px;height:3.5px;border-radius:9px;background:#1A1712"></div>
+<div style="width:3.5px;height:3.5px;border-radius:9px;background:#1A1712"></div>
+</div>
+<div sc-camel-on-click="{{ startShop }}" style="padding:11px 19px;border-radius:999px;background:#B93A26;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.06em;color:#F7F1E3;cursor:pointer">SHOP</div>
+</sc-if>
+<sc-if value="{{ tabRecipes }}">
+<div sc-camel-on-click="{{ openNewRecipe }}" style="padding:11px 19px;border-radius:999px;background:#B93A26;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.06em;color:#F7F1E3;cursor:pointer">+ ADD</div>
+</sc-if>
+</div>
+</div>
+<sc-if value="{{ tabList }}" hint-placeholder-val="{{ true }}">
+<div style="padding:0 16px 10px;display:flex;flex-direction:column;gap:5px">
+<div style="height:7px;border-radius:999px;background:rgba(26,23,18,0.1);overflow:hidden">
+<div style="height:100%;border-radius:999px;background:#2E6B4E;transition:width .35s ease;width:{{ shopPct }};"></div>
+</div>
+<div style="display:flex;justify-content:space-between;gap:8px">
+<div style="font:600 10px/1 Archivo,sans-serif;letter-spacing:0.1em;text-transform:uppercase;color:rgba(26,23,18,0.42)">{{ progressLabel }}</div>
+<div style="flex:none;white-space:nowrap;font:600 10px/1 Archivo,sans-serif;letter-spacing:0.1em;text-transform:uppercase;color:rgba(26,23,18,0.42)">{{ estTotal }} est.</div>
+</div>
+</div>
+</sc-if>
+</div>
+
+<div style="flex:1;overflow:auto">
+
+<sc-if value="{{ tabList }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;padding-bottom:12px">
+<sc-for list="{{ groups }}" as="g" hint-placeholder-count="4">
+<div style="display:flex;flex-direction:column">
+<div style="display:flex;align-items:center;gap:8px;padding:16px 16px 7px">
+<div style="flex:none;display:flex;align-items:center">{{ g.icon }}</div>
+<div style="font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:0.05em;color:#1A1712">{{ g.name }}</div>
+<div style="flex:1;height:2px;background:rgba(26,23,18,0.14)"></div>
+<div style="font:600 11px/1 Archivo,sans-serif;font-variant-numeric:tabular-nums;color:rgba(26,23,18,0.4)">{{ g.count }}</div>
+</div>
+<sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+<div sc-camel-on-click="{{ it.edit }}" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-top:1px solid rgba(26,23,18,0.08);background:#FFFDF6;cursor:pointer">
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+<div style="font:500 16px/1.25 Archivo,sans-serif;color:#1A1712">{{ it.name }}</div>
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+<sc-if value="{{ it.from }}">
+<div style="display:flex;align-items:center;gap:5px">
+<div style="width:5px;height:5px;border-radius:9px;background:#2E6B4E"></div>
+<div style="font:500 10px/1 Archivo,sans-serif;letter-spacing:0.1em;text-transform:uppercase;color:#2E6B4E">{{ it.from }}</div>
+</div>
+</sc-if>
+<sc-if value="{{ it.hasPrice }}">
+<div style="font:600 10px/1 Archivo,sans-serif;font-variant-numeric:tabular-nums;letter-spacing:0.04em;color:rgba(26,23,18,0.45)">{{ it.priceLabel }}</div>
+</sc-if>
+</div>
+</div>
+<div style="flex:none;padding:5px 9px;border:1.5px solid rgba(26,23,18,0.2);border-radius:5px;font:600 12px/1 Archivo,sans-serif;font-variant-numeric:tabular-nums;color:#1A1712">{{ it.qtyLabel }}</div>
+</div>
+</sc-for>
+</div>
+</sc-for>
+<sc-if value="{{ listEmpty }}">
+<div style="padding:56px 34px;text-align:center;font:400 14px/1.6 Archivo,sans-serif;color:rgba(26,23,18,0.45)">Nothing on the list. Add something below, or pull ingredients in from a recipe.</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ tabRecipes }}">
+<div style="display:flex;flex-direction:column;gap:12px;padding:16px 16px 18px">
+<sc-for list="{{ recipeCards }}" as="r" hint-placeholder-count="4">
+<div sc-camel-on-click="{{ r.open }}" style="border:2px solid #1A1712;border-radius:12px;background:#FFFDF6;overflow:hidden;cursor:pointer">
+<div style="display:flex;align-items:stretch">
+<div style="flex:1;min-width:0;padding:13px 14px 12px;display:flex;flex-direction:column;gap:7px">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:25px;line-height:1.05;letter-spacing:0.02em;color:#1A1712">{{ r.title }}</div>
+<div style="font:500 10px/1.3 Archivo,sans-serif;letter-spacing:0.1em;text-transform:uppercase;color:rgba(26,23,18,0.5)">{{ r.meta }}</div>
+<div style="display:flex;align-items:center;gap:7px">
+<sc-for list="{{ r.dots }}" as="d" hint-placeholder-count="5">
+<div style="width:8px;height:8px;border-radius:9px;background:{{ d.bg }};"></div>
+</sc-for>
+<div style="font:400 11px/1 Archivo,sans-serif;color:rgba(26,23,18,0.45)">{{ r.lastNote }}</div>
+</div>
+</div>
+<div style="flex:none;width:70px;border-left:2px solid #1A1712;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;background:{{ r.tileBg }};">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:25px;line-height:1;color:#1A1712">{{ r.kcal }}</div>
+<div style="font:600 8.5px/1 Archivo,sans-serif;letter-spacing:0.12em;color:rgba(26,23,18,0.55)">KCAL</div>
+<div style="font:600 10px/1 Archivo,sans-serif;font-variant-numeric:tabular-nums;color:#B93A26;margin-top:3px">{{ r.cost }}</div>
+</div>
+</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ tabToday }}">
+<div style="display:flex;flex-direction:column;gap:16px;padding:16px 16px 20px">
+<div style="border:2px solid #1A1712;border-radius:12px;background:#FFFDF6;padding:16px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:10px">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:52px;line-height:0.9;letter-spacing:0.01em;color:#1A1712">{{ dayKcal }}</div>
+<div style="font:500 11px/1.4 Archivo,sans-serif;letter-spacing:0.1em;text-transform:uppercase;color:rgba(26,23,18,0.5);text-align:right">of {{ dvKcal }} kcal<br>{{ dayLeft }}</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:11px">
+<sc-for list="{{ dayBars }}" as="b" hint-placeholder-count="4">
+<div style="display:flex;flex-direction:column;gap:5px">
+<div style="display:flex;justify-content:space-between;gap:8px">
+<div style="font:600 11px/1 Archivo,sans-serif;letter-spacing:0.1em;text-transform:uppercase;color:#1A1712">{{ b.label }}</div>
+<div style="font:500 11px/1 Archivo,sans-serif;font-variant-numeric:tabular-nums;color:rgba(26,23,18,0.5)">{{ b.value }}</div>
+</div>
+<div style="height:8px;border-radius:999px;background:rgba(26,23,18,0.09);overflow:hidden">
+<div style="height:100%;border-radius:999px;transition:width .4s ease;width:{{ b.pct }};background:{{ b.bg }};"></div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:0.05em;color:#1A1712">EATEN TODAY</div>
+<sc-for list="{{ dayLog }}" as="l" hint-placeholder-count="2">
+<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:1.5px solid rgba(26,23,18,0.16);border-radius:10px;background:#FFFDF6">
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+<div style="font:500 15px/1.2 Archivo,sans-serif;color:#1A1712">{{ l.title }}</div>
+<div style="font:400 11px/1 Archivo,sans-serif;letter-spacing:0.06em;text-transform:uppercase;color:rgba(26,23,18,0.45)">{{ l.sub }}</div>
+</div>
+<div sc-camel-on-click="{{ l.remove }}" style="flex:none;padding:10px;font:600 12px/1 Archivo,sans-serif;color:#B93A26;cursor:pointer">REMOVE</div>
+</div>
+</sc-for>
+<sc-if value="{{ dayEmpty }}">
+<div style="padding:26px 16px;border:1.5px dashed rgba(26,23,18,0.22);border-radius:10px;text-align:center;font:400 13px/1.5 Archivo,sans-serif;color:rgba(26,23,18,0.45)">Nothing logged yet. Open a recipe and log a serving.</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+</div>
+
+<sc-if value="{{ tabList }}" hint-placeholder-val="{{ true }}">
+<div style="flex:none;border-top:2px solid #1A1712;background:#F0E7D3;padding:10px 12px 11px;display:flex;flex-direction:column;gap:9px">
+<div style="display:flex;align-items:center;gap:9px">
+<input value="{{ draft }}" sc-camel-on-change="{{ onDraft }}" sc-camel-on-key-down="{{ onDraftKey }}" placeholder="Add an item…" style="flex:1;min-width:0;border:none;background:transparent;font:500 16px/1.2 Archivo,sans-serif;color:#1A1712;padding:6px 2px">
+<div style="flex:none;display:flex;align-items:center;gap:2px;border:1.5px solid rgba(26,23,18,0.22);border-radius:8px;background:#FFFDF6">
+<div sc-camel-on-click="{{ decQty }}" style="width:32px;height:34px;display:flex;align-items:center;justify-content:center;font:600 17px/1 Archivo,sans-serif;color:#1A1712;cursor:pointer">−</div>
+<div style="min-width:22px;text-align:center;font:600 14px/1 Archivo,sans-serif;font-variant-numeric:tabular-nums;color:#1A1712">{{ draftQty }}</div>
+<div sc-camel-on-click="{{ incQty }}" style="width:32px;height:34px;display:flex;align-items:center;justify-content:center;font:600 17px/1 Archivo,sans-serif;color:#1A1712;cursor:pointer">+</div>
+</div>
+<div sc-camel-on-click="{{ addItem }}" style="flex:none;width:44px;height:44px;border-radius:999px;background:#B93A26;display:flex;align-items:center;justify-content:center;font:400 24px/1 Archivo,sans-serif;color:#F7F1E3;cursor:pointer">+</div>
+</div>
+<div style="display:flex;align-items:center;gap:8px">
+<div style="font:500 10px/1 Archivo,sans-serif;letter-spacing:0.12em;text-transform:uppercase;color:rgba(26,23,18,0.45)">Files under</div>
+<div sc-camel-on-click="{{ openDraftPicker }}" style="display:flex;align-items:center;gap:7px;padding:7px 12px;border-radius:999px;border:1.5px solid #1A1712;background:#FFFDF6;cursor:pointer">
+<div style="display:flex;align-items:center">{{ draftIcon }}</div>
+<div style="font:600 11px/1 Archivo,sans-serif;letter-spacing:0.06em;text-transform:uppercase;color:#1A1712">{{ draftSectionName }}</div>
+<svg width="12" height="12" sc-camel-view-box="0 0 24 24" fill="none" stroke="#1A1712" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+</div>
+</div>
+</div>
+</sc-if>
+
+<div style="flex:none;display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid rgba(26,23,18,0.14);background:#F7F1E3">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+<div sc-camel-on-click="{{ t.go }}" style="padding:11px 4px 13px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;border-top:3px solid transparent;border-top-color:{{ t.line }};">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:0.07em;color:{{ t.color }};">{{ t.label }}</div>
+<div style="font:600 9px/1 Archivo,sans-serif;letter-spacing:0.1em;font-variant-numeric:tabular-nums;color:{{ t.subColor }};">{{ t.sub }}</div>
+</div>
+</sc-for>
+</div>
+
+</div>
+</sc-if>
+
+<sc-if value="{{ scrim }}">
+<div sc-camel-on-click="{{ closeSheet }}" style="position:absolute;inset:0;background:rgba(26,23,18,0.44);z-index:5"></div>
+</sc-if>
+
+<sc-if value="{{ ovItem }}">
+<div style="position:absolute;top:0;right:0;bottom:0;width:86%;z-index:6;background:#F7F1E3;border-left:3px solid #1A1712;display:flex;flex-direction:column;box-shadow:-14px 0 34px rgba(26,23,18,0.2)">
+<div style="flex:none;padding:10px 14px 12px;border-bottom:3px solid #1A1712;display:flex;align-items:center;gap:8px">
+<div sc-camel-on-click="{{ closeSheet }}" style="flex:none;width:46px;height:46px;margin-left:-6px;border-radius:999px;display:flex;align-items:center;justify-content:center;cursor:pointer">
+<svg width="24" height="24" sc-camel-view-box="0 0 24 24" fill="none" stroke="#1A1712" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg>
+</div>
+<div style="flex:1;min-width:0;font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1.05;letter-spacing:0.02em;color:#1A1712">{{ ed.name }}</div>
+</div>
+<div style="flex:1;overflow:auto;padding:16px 16px 20px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="font:500 10px/1 Archivo,sans-serif;letter-spacing:0.12em;text-transform:uppercase;color:rgba(26,23,18,0.45)">Quantity</div>
+<div style="display:flex;align-items:center;gap:11px">
+<div style="display:flex;align-items:center;gap:2px;border:1.5px solid rgba(26,23,18,0.22);border-radius:9px;background:#FFFDF6">
+<div sc-camel-on-click="{{ ed.dec }}" style="width:46px;height:46px;display:flex;align-items:center;justify-content:center;font:600 20px/1 Archivo,sans-serif;cursor:pointer">−</div>
+<div style="min-width:40px;text-align:center;font:600 17px/1 Archivo,sans-serif;font-variant-numeric:tabular-nums">{{ ed.qty }}</div>
+<div sc-camel-on-click="{{ ed.inc }}" style="width:46px;height:46px;display:flex;align-items:center;justify-content:center;font:600 20px/1 Archivo,sans-serif;cursor:pointer">+</div>
+</div>
+<div style="flex:1;min-width:0;font:400 12px/1.45 Archivo,sans-serif;color:rgba(26,23,18,0.5)">{{ ed.unitNote }}</div>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="font:500 10px/1 Archivo,sans-serif;letter-spacing:0.12em;text-transform:uppercase;color:rgba(26,23,18,0.45)">Price each — optional</div>
+<div style="display:flex;align-items:center;gap:10px">
+<div style="display:flex;align-items:center;gap:2px;padding:0 12px;border:1.5px solid rgba(26,23,18,0.22);border-radius:9px;background:#FFFDF6">
+<div style="font:600 16px/1 Archivo,sans-serif;color:rgba(26,23,18,0.4)">$</div>
+<input value="{{ ed.price }}" sc-camel-on-change="{{ ed.onPrice }}" placeholder="0.00" inputmode="decimal" style="width:82px;border:none;background:transparent;padding:13px 4px;font:600 17px/1 Archivo,sans-serif;font-variant-numeric:tabular-nums;color:#1A1712">
+</div>
+<div style="flex:1;min-width:0;font:600 13px/1.3 Archivo,sans-serif;font-variant-numeric:tabular-nums;color:#B93A26">{{ ed.lineTotal }}</div>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="font:500 10px/1 Archivo,sans-serif;letter-spacing:0.12em;text-transform:uppercase;color:rgba(26,23,18,0.45)">Aisle</div>
+<sc-for list="{{ ed.sections }}" as="s" hint-placeholder-count="8">
+<div sc-camel-on-click="{{ s.pick }}" style="display:flex;align-items:center;gap:11px;padding:13px 13px;border-radius:10px;border:1.5px solid;cursor:pointer;background:{{ s.bg }};border-color:{{ s.border }};">
+<div style="flex:none;display:flex;align-items:center">{{ s.icon }}</div>
+<div style="flex:1;min-width:0;font:500 15px/1.2 Archivo,sans-serif;color:{{ s.color }};">{{ s.name }}</div>
+<sc-if value="{{ s.on }}">
+<svg width="17" height="17" sc-camel-view-box="0 0 16 16" fill="none"><path d="M3 8.6l3.2 3.2L13 4.8" stroke="#F7F1E3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</sc-if>
+</div>
+</sc-for>
+</div>
+<div sc-camel-on-click="{{ ed.remove }}" style="padding:16px;border-radius:11px;border:2px solid #B93A26;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.06em;color:#B93A26;cursor:pointer">REMOVE FROM LIST</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ ovPicker }}">
+<div style="position:absolute;top:0;right:0;bottom:0;width:80%;z-index:6;background:#F7F1E3;border-left:3px solid #1A1712;display:flex;flex-direction:column;box-shadow:-14px 0 34px rgba(26,23,18,0.2)">
+<div style="flex:none;padding:10px 14px 12px;border-bottom:3px solid #1A1712;display:flex;align-items:center;gap:8px">
+<div sc-camel-on-click="{{ closeSheet }}" style="flex:none;width:46px;height:46px;margin-left:-6px;border-radius:999px;display:flex;align-items:center;justify-content:center;cursor:pointer">
+<svg width="24" height="24" sc-camel-view-box="0 0 24 24" fill="none" stroke="#1A1712" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg>
+</div>
+<div style="flex:1;min-width:0;font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.02em;color:#1A1712">FILE IT UNDER</div>
+</div>
+<div style="flex:1;overflow:auto;padding:12px 14px 18px;display:flex;flex-direction:column;gap:7px">
+<sc-for list="{{ draftSections }}" as="s" hint-placeholder-count="10">
+<div sc-camel-on-click="{{ s.pick }}" style="display:flex;align-items:center;gap:11px;padding:13px;border-radius:10px;border:1.5px solid;cursor:pointer;background:{{ s.bg }};border-color:{{ s.border }};">
+<div style="flex:none;display:flex;align-items:center">{{ s.icon }}</div>
+<div style="flex:1;min-width:0;font:500 15px/1.2 Archivo,sans-serif;color:{{ s.color }};">{{ s.name }}</div>
+<sc-if value="{{ s.on }}">
+<svg width="17" height="17" sc-camel-view-box="0 0 16 16" fill="none"><path d="M3 8.6l3.2 3.2L13 4.8" stroke="#F7F1E3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ ovListMenu }}">
+<div style="position:absolute;left:0;right:0;bottom:0;z-index:6;background:#F7F1E3;border-top:3px solid #1A1712;border-radius:16px 16px 0 0;padding:16px 16px 22px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:0.02em;color:#1A1712">LIST OPTIONS</div>
+<div sc-camel-on-click="{{ closeSheet }}" style="padding:10px;font:600 12px/1 Archivo,sans-serif;letter-spacing:0.08em;color:rgba(26,23,18,0.5);cursor:pointer">CLOSE</div>
+</div>
+<div sc-camel-on-click="{{ openSections }}" style="padding:15px;border:2px solid #1A1712;border-radius:11px;background:#FFFDF6;display:flex;flex-direction:column;gap:3px;cursor:pointer">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.04em;color:#1A1712">EDIT AISLES</div>
+<div style="font:400 12.5px/1.45 Archivo,sans-serif;color:rgba(26,23,18,0.55)">Rename, reorder, add or delete sections.</div>
+</div>
+<div sc-camel-on-click="{{ clearChecked }}" style="padding:15px;border:2px solid rgba(26,23,18,0.2);border-radius:11px;background:#FFFDF6;display:flex;flex-direction:column;gap:3px;cursor:pointer">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.04em;color:#1A1712">CLEAR CHECKED ONLY</div>
+<div style="font:400 12.5px/1.45 Archivo,sans-serif;color:rgba(26,23,18,0.55)">{{ clearCheckedNote }}</div>
+</div>
+<div sc-camel-on-click="{{ clearAll }}" style="padding:15px;border:2px solid #B93A26;border-radius:11px;background:{{ clearAllBg }};display:flex;flex-direction:column;gap:3px;cursor:pointer">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.04em;color:{{ clearAllColor }};">{{ clearAllLabel }}</div>
+<div style="font:400 12.5px/1.45 Archivo,sans-serif;color:{{ clearAllSubColor }};">{{ clearAllNote }}</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ ovSuggest }}">
+<div style="position:absolute;left:0;right:0;bottom:0;z-index:7;background:#F7F1E3;border-top:3px solid #1A1712;border-radius:16px 16px 0 0;padding:18px 16px 22px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;flex-direction:column;gap:3px">
+<div style="font:500 10px/1 Archivo,sans-serif;letter-spacing:0.16em;text-transform:uppercase;color:rgba(26,23,18,0.45)">Trip finished</div>
+<div style="font-family:'Bebas Neue',sans-serif;font-size:30px;line-height:1.02;letter-spacing:0.02em;color:#1A1712">{{ sg.title }}</div>
+</div>
+<div style="font:400 13.5px/1.55 Archivo,sans-serif;color:rgba(26,23,18,0.7);text-wrap:pretty">{{ sg.body }}</div>
+<sc-if value="{{ sg.hasItems }}">
+<div style="display:flex;flex-wrap:wrap;gap:6px">
+<sc-for list="{{ sg.items }}" as="i" hint-placeholder-count="4">
+<div style="padding:6px 10px;border-radius:999px;background:#F7EBCF;font:500 12px/1 Archivo,sans-serif;color:#4A3B14">{{ i.name }}</div>
+</sc-for>
+</div>
+</sc-if>
+<div style="display:flex;gap:9px">
+<div sc-camel-on-click="{{ sg.dismiss }}" style="flex:1;padding:15px;border-radius:11px;border:2px solid rgba(26,23,18,0.25);text-align:center;font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:0.05em;color:#1A1712;cursor:pointer">NO THANKS</div>
+<sc-if value="{{ sg.canApply }}">
+<div sc-camel-on-click="{{ sg.apply }}" style="flex:1.4;padding:15px;border-radius:11px;background:#2E6B4E;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:0.05em;color:#F7F1E3;cursor:pointer">{{ sg.applyLabel }}</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ ovSections }}">
+<div style="position:absolute;inset:0;z-index:6;background:#F7F1E3;display:flex;flex-direction:column">
+<div style="flex:none;padding:10px 14px 12px;border-bottom:3px solid #1A1712;display:flex;align-items:center;gap:8px">
+<div sc-camel-on-click="{{ closeSheet }}" style="flex:none;width:46px;height:46px;margin-left:-6px;border-radius:999px;display:flex;align-items:center;justify-content:center;cursor:pointer">
+<svg width="24" height="24" sc-camel-view-box="0 0 24 24" fill="none" stroke="#1A1712" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg>
+</div>
+<div style="flex:1;min-width:0;font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:0.02em;color:#1A1712">AISLE ORDER</div>
+</div>
+<div style="flex:1;overflow:auto;padding:12px 14px 18px;display:flex;flex-direction:column;gap:8px">
+<div style="font:400 12.5px/1.55 Archivo,sans-serif;color:rgba(26,23,18,0.55);padding:0 4px 4px;text-wrap:pretty">Sections sort the list in the order you walk the store. Use the arrows to match your route.</div>
+<sc-for list="{{ secRows }}" as="s" hint-placeholder-count="8">
+<div style="display:flex;align-items:center;gap:9px;padding:10px 11px;border:1.5px solid rgba(26,23,18,0.16);border-radius:10px;background:#FFFDF6">
+<div style="flex:none;display:flex;align-items:center">{{ s.icon }}</div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+<input value="{{ s.name }}" sc-camel-on-change="{{ s.rename }}" style="border:none;background:transparent;font:500 15px/1.2 Archivo,sans-serif;color:#1A1712;padding:0;width:100%">
+<div style="font:400 10px/1 Archivo,sans-serif;letter-spacing:0.1em;text-transform:uppercase;color:rgba(26,23,18,0.4)">{{ s.count }}</div>
+</div>
+<div sc-camel-on-click="{{ s.up }}" style="width:38px;height:38px;flex:none;border-radius:8px;border:1.5px solid rgba(26,23,18,0.18);display:flex;align-items:center;justify-content:center;font:600 13px/1 Archivo,sans-serif;cursor:pointer">↑</div>
+<div sc-camel-on-click="{{ s.down }}" style="width:38px;height:38px;flex:none;border-radius:8px;border:1.5px solid rgba(26,23,18,0.18);display:flex;align-items:center;justify-content:center;font:600 13px/1 Archivo,sans-serif;cursor:pointer">↓</div>
+<div sc-camel-on-click="{{ s.del }}" style="width:38px;height:38px;flex:none;border-radius:8px;display:flex;align-items:center;justify-content:center;font:600 17px/1 Archivo,sans-serif;color:#B93A26;cursor:pointer">×</div>
+</div>
+</sc-for>
+<div style="display:flex;align-items:center;gap:9px;margin-top:6px">
+<input value="{{ newSec }}" sc-camel-on-change="{{ onNewSec }}" placeholder="New section name" style="flex:1;min-width:0;padding:13px;border:1.5px dashed rgba(26,23,18,0.3);border-radius:10px;background:transparent;font:500 15px/1.2 Archivo,sans-serif;color:#1A1712">
+<div sc-camel-on-click="{{ addSec }}" style="flex:none;padding:14px 17px;border-radius:10px;background:#1A1712;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:0.06em;color:#F7F1E3;cursor:pointer">ADD</div>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ ovRecipe }}">
+<div style="position:absolute;inset:0;z-index:6;background:#F7F1E3;display:flex;flex-direction:column">
+<div style="flex:none;padding:8px 14px 13px;border-bottom:3px solid #1A1712;display:flex;flex-direction:column;gap:7px">
+<div style="display:flex;align-items:center;gap:6px">
+<div sc-camel-on-click="{{ closeSheet }}" style="flex:none;width:46px;height:46px;margin-left:-6px;border-radius:999px;display:flex;align-items:center;justify-content:center;cursor:pointer">
+<svg width="24" height="24" sc-camel-view-box="0 0 24 24" fill="none" stroke="#1A1712" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg>
+</div>
+<div style="flex:1"></div>
+<div sc-camel-on-click="{{ rd.logToday }}" style="padding:11px 13px;font:600 11px/1 Archivo,sans-serif;letter-spacing:0.08em;color:#2E6B4E;cursor:pointer">{{ rd.logTodayLabel }}</div>
+<div sc-camel-on-click="{{ rd.toggleMenu }}" style="flex:none;width:44px;height:44px;border-radius:999px;display:flex;align-items:center;justify-content:center;gap:3px;cursor:pointer;background:{{ rd.menuBg }};">
+<div style="width:3.5px;height:3.5px;border-radius:9px;background:#1A1712"></div>
+<div style="width:3.5px;height:3.5px;border-radius:9px;background:#1A1712"></div>
+<div style="width:3.5px;height:3.5px;border-radius:9px;background:#1A1712"></div>
+</div>
+</div>
+<div style="font-family:'Bebas Neue',sans-serif;font-size:38px;line-height:0.98;letter-spacing:0.02em;color:#1A1712;text-wrap:balance">{{ rd.title }}</div>
+<div style="font:500 10px/1.3 Archivo,sans-serif;letter-spacing:0.12em;text-transform:uppercase;color:rgba(26,23,18,0.5)">{{ rd.meta }}</div><sc-if value="{{ rd.hasUrl }}"><div sc-camel-on-click="{{ rd.openUrl }}" style="display:inline-block;margin-top:8px;padding:7px 12px;border:1.5px solid #1A1712;border-radius:999px;font:600 11px/1 Archivo,sans-serif;letter-spacing:0.1em;text-transform:uppercase;color:#1A1712;cursor:pointer">Open original ↗</div></sc-if>
+</div>
+<sc-if value="{{ rd.menuOpen }}">
+<div style="flex:none;padding:11px 14px;background:#F0E7D3;border-bottom:1.5px solid rgba(26,23,18,0.15);display:flex;gap:9px">
+<div sc-camel-on-click="{{ rd.del }}" style="flex:1;padding:13px;border-radius:10px;border:2px solid #B93A26;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.05em;color:{{ rd.delColor }};background:{{ rd.delBg }};cursor:pointer">{{ rd.delLabel }}</div>
+</div>
+</sc-if>
+<div style="flex:1;overflow:auto;padding:14px 16px 20px;display:flex;flex-direction:column;gap:20px">
+
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="display:flex;align-items:center;gap:8px">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:0.05em;color:#1A1712">INGREDIENTS</div>
+<div style="flex:1;height:2px;background:rgba(26,23,18,0.14)"></div>
+<div sc-camel-on-click="{{ rd.toggleAll }}" style="padding:8px 4px;font:600 10px/1 Archivo,sans-serif;letter-spacing:0.08em;color:#B93A26;cursor:pointer">{{ rd.toggleAllLabel }}</div>
+</div>
+<sc-for list="{{ rd.ingredients }}" as="g" hint-placeholder-count="6">
+<div sc-camel-on-click="{{ g.toggle }}" style="display:flex;align-items:center;gap:12px;padding:10px 2px;border-bottom:1px solid rgba(26,23,18,0.08);cursor:pointer">
+<div style="width:23px;height:23px;flex:none;border-radius:6px;display:flex;align-items:center;justify-content:center;border:2px solid;background:{{ g.boxBg }};border-color:{{ g.boxBorder }};">
+<sc-if value="{{ g.on }}">
+<svg width="13" height="13" sc-camel-view-box="0 0 16 16" fill="none"><path d="M3 8.6l3.2 3.2L13 4.8" stroke="#F7F1E3" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</sc-if>
+</div>
+<div style="flex:1;min-width:0;font:500 15px/1.3 Archivo,sans-serif;color:#1A1712">{{ g.text }}</div>
+<div style="flex:none;display:flex;align-items:center;gap:7px">
+<div style="font:600 11px/1 Archivo,sans-serif;font-variant-numeric:tabular-nums;color:rgba(26,23,18,0.45)">{{ g.priceLabel }}</div>
+<div style="display:flex;align-items:center">{{ g.icon }}</div>
+</div>
+</div>
+</sc-for>
+<div sc-camel-on-click="{{ rd.addToList }}" style="margin-top:4px;padding:16px;border-radius:11px;background:#B93A26;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.06em;color:#F7F1E3;cursor:pointer">{{ rd.addLabel }}</div>
+<sc-if value="{{ rd.justAdded }}">
+<div style="padding:11px 13px;border-radius:9px;background:#E2EDE5;border:1.5px solid #2E6B4E;font:500 12.5px/1.45 Archivo,sans-serif;color:#23543D">{{ rd.addedMsg }}</div>
+</sc-if>
+</div>
+
+<sc-if value="{{ rd.hasAdjustments }}">
+<div style="display:flex;flex-direction:column;gap:8px;padding:14px;border-radius:11px;background:#F7EBCF;border-left:4px solid #D3A32E">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:0.05em;color:#1A1712">YOUR ADJUSTMENTS</div>
+<sc-for list="{{ rd.adjustments }}" as="a" hint-placeholder-count="2">
+<div style="display:flex;gap:9px;align-items:flex-start">
+<div style="flex:none;width:5px;height:5px;border-radius:9px;background:#8A6A14;margin-top:7px"></div>
+<div style="flex:1;font:400 13px/1.5 Archivo,sans-serif;color:#4A3B14;text-wrap:pretty">{{ a.text }}</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="display:flex;align-items:center;gap:8px">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:0.05em;color:#1A1712">METHOD</div>
+<div style="flex:1;height:2px;background:rgba(26,23,18,0.14)"></div>
+</div>
+<sc-for list="{{ rd.steps }}" as="s" hint-placeholder-count="4">
+<div style="display:flex;gap:12px;align-items:flex-start">
+<div style="flex:none;width:24px;height:24px;border-radius:999px;background:#1A1712;display:flex;align-items:center;justify-content:center;font:600 12px/1 Archivo,sans-serif;color:#F7F1E3">{{ s.n }}</div>
+<div style="flex:1;font:400 14px/1.55 Archivo,sans-serif;color:#312A20;text-wrap:pretty">{{ s.text }}</div>
+</div>
+</sc-for>
+</div>
+
+<sc-if value="{{ showNutrition }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="display:flex;align-items:center;gap:8px">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:0.05em;color:#1A1712">PER SERVING</div>
+<div style="flex:1;height:2px;background:rgba(26,23,18,0.14)"></div>
+<div style="font:600 11px/1 Archivo,sans-serif;font-variant-numeric:tabular-nums;color:#B93A26">{{ rd.costPerServing }}</div>
+</div>
+<sc-for list="{{ rd.nutrition }}" as="n" hint-placeholder-count="5">
+<div style="display:flex;flex-direction:column;gap:5px">
+<div style="display:flex;justify-content:space-between;gap:8px">
+<div style="font:600 11px/1 Archivo,sans-serif;letter-spacing:0.1em;text-transform:uppercase;color:#1A1712">{{ n.label }}</div>
+<div style="font:500 11px/1 Archivo,sans-serif;font-variant-numeric:tabular-nums;color:rgba(26,23,18,0.5)">{{ n.value }}</div>
+</div>
+<div style="height:7px;border-radius:999px;background:rgba(26,23,18,0.09);overflow:hidden">
+<div style="height:100%;border-radius:999px;width:{{ n.pct }};background:{{ n.bg }};"></div>
+</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:center;gap:8px">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:0.05em;color:#1A1712">COOK LOG</div>
+<div style="flex:1;height:2px;background:rgba(26,23,18,0.14)"></div>
+</div>
+<sc-for list="{{ rd.logs }}" as="l" hint-placeholder-count="1">
+<div style="display:flex;flex-direction:column;gap:7px;padding:13px;border:1.5px solid rgba(26,23,18,0.16);border-radius:10px;background:#FFFDF6">
+<div style="display:flex;align-items:center;gap:8px">
+<div style="font:600 10px/1 Archivo,sans-serif;letter-spacing:0.1em;text-transform:uppercase;color:rgba(26,23,18,0.45)">{{ l.date }}</div>
+<div style="flex:1"></div>
+<sc-for list="{{ l.dots }}" as="d" hint-placeholder-count="5">
+<div style="width:7px;height:7px;border-radius:9px;background:{{ d.bg }};"></div>
+</sc-for>
+</div>
+<div style="font:400 13.5px/1.5 Archivo,sans-serif;color:#312A20;text-wrap:pretty">{{ l.note }}</div>
+<sc-if value="{{ l.hasIssues }}">
+<div style="display:flex;flex-wrap:wrap;gap:5px">
+<sc-for list="{{ l.issues }}" as="i" hint-placeholder-count="2">
+<div style="padding:4px 8px;border-radius:999px;background:#F6E4DE;font:600 9.5px/1 Archivo,sans-serif;letter-spacing:0.08em;text-transform:uppercase;color:#8E2C1C">{{ i.label }}</div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</sc-for>
+<sc-if value="{{ rd.noLogs }}">
+<div style="padding:16px;border:1.5px dashed rgba(26,23,18,0.22);border-radius:10px;font:400 13px/1.5 Archivo,sans-serif;color:rgba(26,23,18,0.45);text-align:center">Not cooked yet.</div>
+</sc-if>
+<div sc-camel-on-click="{{ rd.openCook }}" style="padding:16px;border-radius:11px;border:2px solid #1A1712;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.06em;color:#1A1712;cursor:pointer">LOG A COOK</div>
+</div>
+
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ ovCook }}">
+<div style="position:absolute;inset:0;z-index:7;background:#F7F1E3;display:flex;flex-direction:column">
+<div style="flex:none;padding:8px 14px 13px;border-bottom:3px solid #1A1712;display:flex;align-items:center;gap:8px">
+<div sc-camel-on-click="{{ backToRecipe }}" style="flex:none;width:46px;height:46px;margin-left:-6px;border-radius:999px;display:flex;align-items:center;justify-content:center;cursor:pointer">
+<svg width="24" height="24" sc-camel-view-box="0 0 24 24" fill="none" stroke="#1A1712" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg>
+</div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+<div style="font:500 10px/1 Archivo,sans-serif;letter-spacing:0.16em;text-transform:uppercase;color:rgba(26,23,18,0.45)">How did it come out?</div>
+<div style="font-family:'Bebas Neue',sans-serif;font-size:29px;line-height:1.02;letter-spacing:0.02em;color:#1A1712">{{ ck.title }}</div>
+</div>
+</div>
+<div style="flex:1;overflow:auto;padding:16px 16px 20px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="font:500 10px/1 Archivo,sans-serif;letter-spacing:0.12em;text-transform:uppercase;color:rgba(26,23,18,0.45)">Overall</div>
+<div style="display:flex;gap:9px">
+<sc-for list="{{ ck.rating }}" as="r" hint-placeholder-count="5">
+<div sc-camel-on-click="{{ r.pick }}" style="flex:1;height:48px;border-radius:9px;border:2px solid #1A1712;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:20px;cursor:pointer;background:{{ r.bg }};color:{{ r.color }};">{{ r.n }}</div>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="font:500 10px/1 Archivo,sans-serif;letter-spacing:0.12em;text-transform:uppercase;color:rgba(26,23,18,0.45)">What went wrong? Pick any</div>
+<div style="display:flex;flex-wrap:wrap;gap:7px">
+<sc-for list="{{ ck.issues }}" as="i" hint-placeholder-count="8">
+<div sc-camel-on-click="{{ i.toggle }}" style="padding:11px 14px;border-radius:999px;border:1.5px solid #1A1712;font:600 12px/1 Archivo,sans-serif;letter-spacing:0.03em;cursor:pointer;background:{{ i.bg }};color:{{ i.color }};">{{ i.label }}</div>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="font:500 10px/1 Archivo,sans-serif;letter-spacing:0.12em;text-transform:uppercase;color:rgba(26,23,18,0.45)">Notes</div>
+<textarea value="{{ ck.note }}" sc-camel-on-change="{{ ck.onNote }}" placeholder="Anything you want to remember next time…" rows="4" style="border:1.5px solid rgba(26,23,18,0.2);border-radius:10px;background:#FFFDF6;padding:12px;font:400 14px/1.5 Archivo,sans-serif;color:#1A1712;resize:none"></textarea>
+</div>
+<div sc-camel-on-click="{{ ck.submit }}" style="padding:16px;border-radius:11px;background:#1A1712;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.06em;color:#F7F1E3;cursor:pointer">{{ ck.submitLabel }}</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ ovFixes }}">
+<div style="position:absolute;inset:0;z-index:7;background:#F7F1E3;display:flex;flex-direction:column">
+<div style="flex:none;padding:8px 14px 13px;border-bottom:3px solid #1A1712;display:flex;align-items:center;gap:8px">
+<div sc-camel-on-click="{{ backToCook }}" style="flex:none;width:46px;height:46px;margin-left:-6px;border-radius:999px;display:flex;align-items:center;justify-content:center;cursor:pointer">
+<svg width="24" height="24" sc-camel-view-box="0 0 24 24" fill="none" stroke="#1A1712" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg>
+</div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+<div style="font:500 10px/1 Archivo,sans-serif;letter-spacing:0.16em;text-transform:uppercase;color:rgba(26,23,18,0.45)">{{ fx.kicker }}</div>
+<div style="font-family:'Bebas Neue',sans-serif;font-size:29px;line-height:1.02;letter-spacing:0.02em;color:#1A1712">SUGGESTED CHANGES</div>
+</div>
+</div>
+<div style="flex:1;overflow:auto;padding:14px 16px 20px;display:flex;flex-direction:column;gap:12px">
+<sc-for list="{{ fx.cards }}" as="c" hint-placeholder-count="2">
+<div style="border:2px solid #1A1712;border-radius:12px;background:#FFFDF6;overflow:hidden;display:flex;flex-direction:column">
+<div style="padding:9px 13px;background:#1A1712;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.05em;color:#F7F1E3">{{ c.label }}</div>
+<div style="padding:13px;display:flex;flex-direction:column;gap:11px">
+<div style="font:500 14.5px/1.5 Archivo,sans-serif;color:#1A1712;text-wrap:pretty">{{ c.fix }}</div>
+<div style="display:flex;gap:9px;align-items:flex-start;padding-top:9px;border-top:1px solid rgba(26,23,18,0.1)">
+<div style="flex:none;font:600 9.5px/1.4 Archivo,sans-serif;letter-spacing:0.1em;color:rgba(26,23,18,0.4)">OR</div>
+<div style="flex:1;font:400 13px/1.5 Archivo,sans-serif;color:rgba(26,23,18,0.65);text-wrap:pretty">{{ c.alt }}</div>
+</div>
+<div sc-camel-on-click="{{ c.toggle }}" style="padding:13px;border-radius:9px;border:1.5px solid #1A1712;text-align:center;font:600 12px/1 Archivo,sans-serif;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;background:{{ c.bg }};color:{{ c.color }};">{{ c.actionLabel }}</div>
+</div>
+</div>
+</sc-for>
+<sc-if value="{{ fx.none }}">
+<div style="padding:26px 18px;border:1.5px dashed rgba(26,23,18,0.22);border-radius:11px;text-align:center;font:400 13.5px/1.6 Archivo,sans-serif;color:rgba(26,23,18,0.5);text-wrap:pretty">No problems flagged, so nothing to change. Your note is saved to the cook log.</div>
+</sc-if>
+<div sc-camel-on-click="{{ fx.save }}" style="margin-top:4px;padding:16px;border-radius:11px;background:#2E6B4E;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.06em;color:#F7F1E3;cursor:pointer">{{ fx.saveLabel }}</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ ovNew }}">
+<div style="position:absolute;left:0;right:0;bottom:0;z-index:6;background:#F7F1E3;border-top:3px solid #1A1712;border-radius:16px 16px 0 0;padding:18px 16px 22px;display:flex;flex-direction:column;gap:13px">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.02em;color:#1A1712">ADD A RECIPE</div>
+<div sc-camel-on-click="{{ closeSheet }}" style="padding:10px;font:600 12px/1 Archivo,sans-serif;letter-spacing:0.08em;color:rgba(26,23,18,0.5);cursor:pointer">CLOSE</div>
+</div>
+<div sc-camel-on-click="{{ openImport }}" style="padding:15px;border:2px solid #1A1712;border-radius:11px;background:#FFFDF6;display:flex;flex-direction:column;gap:3px;cursor:pointer">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:0.04em;color:#1A1712">PASTE A LINK</div>
+<div style="font:400 12.5px/1.45 Archivo,sans-serif;color:rgba(26,23,18,0.55)">Pull the title, ingredients and method off a recipe page.</div>
+</div>
+<div sc-camel-on-click="{{ openManual }}" style="padding:15px;border:2px solid #1A1712;border-radius:11px;background:#FFFDF6;display:flex;flex-direction:column;gap:3px;cursor:pointer">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:0.04em;color:#1A1712">WRITE IT YOURSELF</div>
+<div style="font:400 12.5px/1.45 Archivo,sans-serif;color:rgba(26,23,18,0.55)">Ingredient rows and steps, typed in by hand.</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ ovImport }}">
+<div style="position:absolute;inset:0;z-index:7;background:#F7F1E3;display:flex;flex-direction:column">
+<div style="flex:none;padding:8px 14px 13px;border-bottom:3px solid #1A1712;display:flex;align-items:center;gap:8px">
+<div sc-camel-on-click="{{ closeSheet }}" style="flex:none;width:46px;height:46px;margin-left:-6px;border-radius:999px;display:flex;align-items:center;justify-content:center;cursor:pointer">
+<svg width="24" height="24" sc-camel-view-box="0 0 24 24" fill="none" stroke="#1A1712" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg>
+</div>
+<div style="flex:1;min-width:0;font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:0.02em;color:#1A1712">IMPORT</div>
+</div>
+<div style="flex:1;overflow:auto;padding:16px 16px 20px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="font:500 10px/1 Archivo,sans-serif;letter-spacing:0.12em;text-transform:uppercase;color:rgba(26,23,18,0.45)">Recipe URL</div>
+<input value="{{ im.url }}" sc-camel-on-change="{{ im.onUrl }}" placeholder="https://…" style="padding:14px;border:1.5px solid rgba(26,23,18,0.2);border-radius:10px;background:#FFFDF6;font:400 14px/1.2 Archivo,sans-serif;color:#1A1712">
+<div sc-camel-on-click="{{ im.fetch }}" style="padding:16px;border-radius:11px;background:#B93A26;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.06em;color:#F7F1E3;cursor:pointer">{{ im.fetchLabel }}</div>
+</div>
+<sc-if value="{{ im.loading }}">
+<div style="padding:24px;text-align:center;font:500 13px/1.5 Archivo,sans-serif;color:rgba(26,23,18,0.5)">Reading the page…</div>
+</sc-if>
+<sc-if value="{{ im.done }}">
+<div style="display:flex;flex-direction:column;gap:13px">
+<sc-if value="{{ im.found }}"><div style="padding:11px 13px;border-radius:9px;background:#E2EDE5;border:1.5px solid #2E6B4E;font:500 12.5px/1.45 Archivo,sans-serif;color:#23543D">Found a recipe. Check it over before saving.</div></sc-if><sc-if value="{{ im.partial }}"><div style="padding:11px 13px;border-radius:9px;background:#F7EBCF;border:1.5px solid #D3A32E;font:500 12.5px/1.45 Archivo,sans-serif;color:#4A3B14">Opened the page, but it has no recipe data to read. Save it as a link, or add the ingredients by hand.</div></sc-if><sc-if value="{{ im.error }}"><div style="padding:11px 13px;border-radius:9px;background:#F6E1DC;border:1.5px solid #B93A26;font:500 12.5px/1.45 Archivo,sans-serif;color:#7A2618">{{ im.errText }}</div></sc-if>
+<div style="border:2px solid #1A1712;border-radius:12px;background:#FFFDF6;padding:14px;display:flex;flex-direction:column;gap:11px">
+<input value="{{ im.title }}" sc-camel-on-change="{{ im.onTitle }}" placeholder="Recipe name" style="width:100%;padding:4px 0;border:none;border-bottom:1.5px solid rgba(26,23,18,0.2);background:transparent;font-family:'Bebas Neue',sans-serif;font-size:27px;line-height:1.02;letter-spacing:0.02em;color:#1A1712">
+<div style="font:500 10px/1 Archivo,sans-serif;letter-spacing:0.12em;text-transform:uppercase;color:rgba(26,23,18,0.5)">{{ im.meta }}</div>
+<div style="height:1px;background:rgba(26,23,18,0.12)"></div>
+<sc-if value="{{ im.hasIng }}"><sc-for list="{{ im.ingredients }}" as="g" hint-placeholder-count="5">
+<div style="display:flex;gap:10px;align-items:center">
+<div style="flex:1;font:400 13.5px/1.4 Archivo,sans-serif;color:#312A20">{{ g.text }}</div>
+<div style="flex:none;font:500 9.5px/1 Archivo,sans-serif;letter-spacing:0.1em;text-transform:uppercase;color:rgba(26,23,18,0.38)">{{ g.sectionName }}</div>
+</div>
+</sc-for></sc-if>
+</div>
+<div sc-camel-on-click="{{ im.save }}" style="padding:16px;border-radius:11px;background:#2E6B4E;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.06em;color:#F7F1E3;cursor:pointer">{{ im.saveLabel }}</div>
+</div>
+</sc-if>
+<div style="padding:13px;border-radius:10px;background:#F7EBCF;font:400 12.5px/1.5 Archivo,sans-serif;color:#4A3B14;text-wrap:pretty">Paste a link from almost any recipe site. Ingredients are read from the page and sorted into aisles; the link is kept so you can open the original while cooking.</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ ovManual }}">
+<div style="position:absolute;inset:0;z-index:7;background:#F7F1E3;display:flex;flex-direction:column">
+<div style="flex:none;padding:8px 14px 13px;border-bottom:3px solid #1A1712;display:flex;align-items:center;gap:8px">
+<div sc-camel-on-click="{{ closeSheet }}" style="flex:none;width:46px;height:46px;margin-left:-6px;border-radius:999px;display:flex;align-items:center;justify-content:center;cursor:pointer">
+<svg width="24" height="24" sc-camel-view-box="0 0 24 24" fill="none" stroke="#1A1712" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg>
+</div>
+<div style="flex:1;min-width:0;font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:0.02em;color:#1A1712">NEW RECIPE</div>
+</div>
+<div style="flex:1;overflow:auto;padding:16px 16px 20px;display:flex;flex-direction:column;gap:18px">
+<input value="{{ mn.title }}" sc-camel-on-change="{{ mn.onTitle }}" placeholder="Recipe name" style="padding:14px;border:1.5px solid rgba(26,23,18,0.2);border-radius:10px;background:#FFFDF6;font:500 17px/1.2 Archivo,sans-serif;color:#1A1712">
+<div style="display:flex;gap:9px">
+<input value="{{ mn.servings }}" sc-camel-on-change="{{ mn.onServings }}" placeholder="Servings" style="flex:1;min-width:0;padding:13px;border:1.5px solid rgba(26,23,18,0.2);border-radius:10px;background:#FFFDF6;font:400 14px/1.2 Archivo,sans-serif;color:#1A1712">
+<input value="{{ mn.time }}" sc-camel-on-change="{{ mn.onTime }}" placeholder="Time, e.g. 35 min" style="flex:1;min-width:0;padding:13px;border:1.5px solid rgba(26,23,18,0.2);border-radius:10px;background:#FFFDF6;font:400 14px/1.2 Archivo,sans-serif;color:#1A1712">
+</div>
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="font:500 10px/1 Archivo,sans-serif;letter-spacing:0.12em;text-transform:uppercase;color:rgba(26,23,18,0.45)">Ingredients</div>
+<sc-for list="{{ mn.rows }}" as="r" hint-placeholder-count="3">
+<div style="display:flex;gap:8px;align-items:center">
+<input value="{{ r.amount }}" sc-camel-on-change="{{ r.onAmount }}" placeholder="2 lb" style="flex:none;width:72px;padding:12px 10px;border:1.5px solid rgba(26,23,18,0.2);border-radius:9px;background:#FFFDF6;font:500 13px/1.2 Archivo,sans-serif;font-variant-numeric:tabular-nums;color:#1A1712">
+<input value="{{ r.name }}" sc-camel-on-change="{{ r.onName }}" placeholder="Ingredient" style="flex:1;min-width:0;padding:12px 10px;border:1.5px solid rgba(26,23,18,0.2);border-radius:9px;background:#FFFDF6;font:400 14px/1.2 Archivo,sans-serif;color:#1A1712">
+<div style="flex:none;width:54px;font:500 9px/1.2 Archivo,sans-serif;letter-spacing:0.08em;text-transform:uppercase;color:rgba(26,23,18,0.4)">{{ r.sectionName }}</div>
+</div>
+</sc-for>
+<div sc-camel-on-click="{{ mn.addRow }}" style="padding:13px;border-radius:9px;border:1.5px dashed rgba(26,23,18,0.3);text-align:center;font:600 11px/1 Archivo,sans-serif;letter-spacing:0.1em;text-transform:uppercase;color:rgba(26,23,18,0.55);cursor:pointer">+ Another ingredient</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="font:500 10px/1 Archivo,sans-serif;letter-spacing:0.12em;text-transform:uppercase;color:rgba(26,23,18,0.45)">Method — one step per line</div>
+<textarea value="{{ mn.steps }}" sc-camel-on-change="{{ mn.onSteps }}" rows="6" placeholder="Heat the oven to 425°F…" style="border:1.5px solid rgba(26,23,18,0.2);border-radius:10px;background:#FFFDF6;padding:12px;font:400 14px/1.55 Archivo,sans-serif;color:#1A1712;resize:none"></textarea>
+</div>
+<div sc-camel-on-click="{{ mn.save }}" style="padding:16px;border-radius:11px;background:#2E6B4E;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.06em;color:#F7F1E3;cursor:pointer">{{ mn.saveLabel }}</div>
+</div>
+</div>
+</sc-if>
+
+</div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;checkoffStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Drop to bottom of section&quot;,&quot;Grey out in place&quot;,&quot;Hide checked items&quot;],&quot;default&quot;:&quot;Drop to bottom of section&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Shopping mode&quot;},&quot;showNutrition&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Recipes&quot;}}">
