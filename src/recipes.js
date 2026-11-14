@@ -568,6 +568,73 @@ const RECIPE_LIBRARY=[
     {id:'r3',kind:'check',title:'Mozzarella as a moisture barrier',text:'Putting the mozzarella directly on the bread (as written) keeps tomato juice off it — keep that order, especially if packing for later.'},
     {id:'r4',kind:'reviews',title:'Few reviews yet',text:'Rated 5 stars by 8 people, with only one written comment (positive, no changes).'}
    ],
+      logs:[],adj:[]},
+
+  {id:'lib-breakfast-burrito',title:'Breakfast Burrito',
+   source:'Mine — from a café menu',url:'',
+   time:'45 min',servings:4,tags:['breakfast','vegetarian','tofu','meal prep','mine'],
+   ing:[
+    {a:'4 large',n:'flour tortillas (burrito size)',s:'bakery',p:0},
+    {a:'1 lb',n:'Yukon Gold potatoes, ½" dice',s:'produce',p:0},
+    {a:'1 tsp each',n:'smoked paprika and garlic powder',s:'pantry',p:0},
+    {a:'14 oz',n:'extra-firm tofu, pressed',s:'produce',p:0},
+    {a:'½ tsp',n:'ground turmeric',s:'pantry',p:0},
+    {a:'2 tbsp',n:'nutritional yeast (optional)',s:'pantry',p:0},
+    {a:'8 oz',n:'soy chorizo (or the vegan chorizo tofu crumbles)',s:'meat',p:0},
+    {a:'1 can (4 oz)',n:'diced green chiles, drained',s:'canned',p:0},
+    {a:'1 cup',n:'shredded cheddar or Monterey Jack',s:'dairy',p:0},
+    {a:'3 Roma',n:'tomatoes (salsa)',s:'produce',p:0},
+    {a:'¼',n:'white onion (salsa)',s:'produce',p:0},
+    {a:'½ bunch',n:'cilantro (salsa)',s:'produce',p:0},
+    {a:'1',n:'lime (salsa)',s:'produce',p:0},
+    {a:'2 tbsp',n:'olive oil',s:'pantry',p:0},
+    {a:'',n:'salt and pepper',s:'pantry',p:0}
+   ],
+   steps:[
+    'Potatoes: heat the oven to 425°F. Toss the diced potatoes with 1 tbsp oil, the paprika, garlic powder and ½ tsp salt; roast in one layer until crisp, 25–30 minutes, turning once.',
+    'Salsa: finely chop the tomatoes, onion and cilantro; mix with the lime juice and a good pinch of salt. Let it sit while you cook.',
+    'Chorizo: brown the soy chorizo in a skillet over medium, breaking it up, 5–6 minutes. Move to a bowl.',
+    'Tofu scramble: in the same pan, add 1 tbsp oil and crumble in the tofu. Cook over medium-high until the moisture is gone and it starts to brown, 6–8 minutes. Stir in the turmeric, nutritional yeast, green chiles, ½ tsp salt and pepper.',
+    'Warm the tortillas so they fold without cracking. Down the middle of each, layer cheese, potatoes, chorizo and tofu scramble. Fold in the sides and roll tightly.',
+    'Grill seam-side down in a dry skillet or panini press over medium until golden and sealed, 2–3 minutes per side. Serve with the salsa.'
+   ],
+   nut:{kcal:765,protein:34,carbs:83,fat:35,fiber:9,est:true},
+   recs:[
+    {id:'r1',kind:'check',title:'The TAG upgrade: jalapeño + avocado',text:'The menu\'s TAG version adds fresh jalapeño and avocado inside the burrito.',
+     change:{label:'TAG version',addIng:[{a:'1',n:'jalapeño, finely diced',s:'produce'},{a:'1',n:'avocado, sliced',s:'produce'}],steps:[[4,'Warm the tortillas so they fold without cracking. Down the middle of each, layer cheese, potatoes, chorizo, tofu scramble, fresh jalapeño and avocado. Fold in the sides and roll tightly.']]}},
+    {id:'r2',kind:'check',title:'Built from a menu description',text:'Amounts, method and nutrition are estimates for 4 burritos — adjust after the first try.'},
+    {id:'r3',kind:'check',title:'Dry tofu, crisp potatoes',text:'Watery tofu and soft potatoes are what make breakfast burritos soggy. Press the tofu 15+ minutes and cook it until it squeaks; don\'t crowd the potatoes on the sheet pan; drain the green chiles well.'},
+    {id:'r4',kind:'check',title:'Freezes well',text:'Skip the avocado and salsa, wrap each grilled burrito in foil and freeze up to 2 months. Reheat in the foil at 375°F for 30–35 minutes from frozen, or microwave unwrapped 2–3 minutes then crisp in a pan.'}
+   ],
+   logs:[],adj:[]},
+
+  {id:'lib-das-visbek',title:'Das Visbek',
+   source:'Mine — from a café menu',url:'',
+   time:'10 min',servings:1,tags:['breakfast','sandwich','vegetarian','mine'],
+   ing:[
+    {a:'1',n:'tomato basil bagel',s:'bakery',p:0},
+    {a:'2',n:'eggs',s:'dairy',p:0},
+    {a:'1 slice',n:'Swiss cheese',s:'dairy',p:0},
+    {a:'½',n:'avocado',s:'produce',p:0},
+    {a:'1 tbsp',n:'pesto',s:'canned',p:0,h:1},
+    {a:'2 slices',n:'tomato',s:'produce',p:0},
+    {a:'1 handful',n:'mixed greens',s:'produce',p:0},
+    {a:'1 tsp',n:'butter',s:'dairy',p:0},
+    {a:'',n:'salt and pepper',s:'pantry',p:0}
+   ],
+   steps:[
+    'Split and toast the bagel.',
+    'Beat the eggs with a pinch of salt and pepper. Melt the butter in a small non-stick pan over medium-low, pour in the eggs and let them set, then fold into a square about the size of the bagel, 2–3 minutes.',
+    'Lay the Swiss on the eggs, cover the pan and let it melt, about 30 seconds.',
+    'Spread pesto on the top half of the bagel. Mash or slice the avocado onto the bottom half and season it.',
+    'Stack the egg and cheese on the avocado, then the tomato and mixed greens. Close and serve.'
+   ],
+   nut:{kcal:765,protein:33,carbs:67,fat:43,fiber:8,est:true},
+   recs:[
+    {id:'r1',kind:'check',title:'Built from a menu description',text:'The egg style and amounts are my guess (a folded egg sized to the bagel). Nutrition is estimated.'},
+    {id:'r2',kind:'check',title:'Can\'t find tomato basil bagels?',text:'Use a plain or everything bagel and add a few fresh basil leaves with the greens — it gets you most of the way there.'},
+    {id:'r3',kind:'check',title:'Keep the greens crisp',text:'Hot egg wilts greens on contact. Keep the tomato between the egg and the greens, and dry the greens well.'}
+   ],
    logs:[],adj:[]}
 ];
 
