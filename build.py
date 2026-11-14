@@ -11,6 +11,9 @@ import json, pathlib, sys
 root = pathlib.Path(__file__).parent
 src = root / 'src'
 template = ''.join((src / n).read_text() for n in ('template-before.html', 'recipes.js', 'app.js', 'template-after.html'))
+# Stamp the build date so the app can show which version is installed.
+import datetime
+template = template.replace('__APP_BUILD__', datetime.datetime.now().strftime('%b %-d, %Y %H:%M UTC'))
 for n in ('recipes.js', 'app.js'):
     if '</script>' in (src / n).read_text():
         sys.exit(f'src/{n} must not contain a literal </script>')

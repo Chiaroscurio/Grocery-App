@@ -297,6 +297,14 @@ function parseRecipeText(text){
     servings:yl?+yl[1]:4,ing:ings,steps,nut:{kcal:0,protein:0,carbs:0,fat:0,fiber:0},partial:!ings.length};
 }
 
+// Sample data shipped with the original prototype; removed from any device that saved it.
+const APP_BUILD='__APP_BUILD__';
+const DEMO_RECIPES={rc1:'Weeknight chicken thighs',rc2:'Lemon risotto',rc3:'Coconut shrimp curry',rc4:'Weekend focaccia'};
+const DEMO_ITEMS={i1:'Yellow onions',i2:'Garlic',i3:'Baby spinach',i4:'Limes',i5:'Cilantro',i6:'Sourdough',i7:'Chicken thighs',i8:'Shrimp',i9:'Whole milk',
+  i10:'Eggs',i11:'Parmesan',i12:'Canned black beans',i13:'Coconut milk',i14:'Chicken stock',i15:'Arborio rice',i16:'Olive oil',i17:'Frozen peas',i18:'Paper towels'};
+const isDemoRecipe=r=>DEMO_RECIPES[r.id]===r.title||(r.title==='Sheet-pan harissa cauliflower'&&/^imported/.test(r.source||''));
+const isDemoItem=i=>DEMO_ITEMS[i.id]===i.name;
+
 const pickRandom=a=>a.length?a[Math.floor(Math.random()*a.length)]:null;
 
 class Component extends DCLogic {
@@ -331,7 +339,8 @@ class Component extends DCLogic {
     const removedLib=d.removedLib||[];
     // Library-owned details (recommendations, tags) refresh on every load;
     // a link-only recipe is replaced once the library has its ingredients.
-    let recipes=(d.recipes||this.state.recipes).map(r=>{
+    const demoIds=new Set((d.recipes||[]).filter(isDemoRecipe).map(r=>r.id));
+    let recipes=(d.recipes||this.state.recipes).filter(r=>!isDemoRecipe(r)).map(r=>{
       const L=libById[r.id]; if(!L) return r;
       if(r.linkOnly&&!L.linkOnly) return {...clone(L),logs:r.logs||[],adj:r.adj||[]};
       if((L.rev||1)>(r.rev||1)){
@@ -354,8 +363,8 @@ class Component extends DCLogic {
     })].map(withV1);
     const kitchen=Array.isArray(d.kitchen)?d.kitchen:[];
     const plan=Array.isArray(d.plan)&&d.plan.length===7?d.plan.map(id=>recipes.some(r=>r.id===id)?id:null):this.state.plan;
-    this.setState({items:d.items||this.state.items,sections:d.sections||this.state.sections,
-      recipes,dayLog:d.dayLog||this.state.dayLog,removedLib,plan,kitchen});
+    this.setState({items:(d.items||this.state.items).filter(i=>!isDemoItem(i)),sections:d.sections||this.state.sections,
+      recipes,dayLog:(d.dayLog||this.state.dayLog).filter(x=>!demoIds.has(x.rid)),removedLib,plan,kitchen});
     this._ts=e=>{const t=e.touches[0];this._sx=t.clientX;this._sy=t.clientY;};
     this._te=e=>{
       if(this._sx==null) return;
@@ -881,6 +890,7 @@ class Component extends DCLogic {
       openListMenu:()=>this.set({view:'listmenu'}),
       openSections:()=>this.set({view:'sections'}),
       clearChecked:()=>this.setState(st=>({items:st.items.filter(i=>!i.checked),view:null})),
+      appVersion:'App updated '+APP_BUILD+' · '+s.recipes.length+' recipes',
       clearCheckedNote:done?'Removes the '+done+' checked '+(done===1?'item':'items')+'.':'Nothing is checked right now.',
       clearAll:()=>{ if(!s.confirmClear) return this.set({confirmClear:true});
         this.setState(st=>({items:[],view:null,confirmClear:false})); },

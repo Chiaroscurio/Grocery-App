@@ -60,6 +60,13 @@ on Cloudflare Pages, which can also host from a private repo:
    hostname and allow only your email (free one-time-code login).
 6. On your phone, open the URL in Chrome → ⋮ → **Add to Home screen**.
 
+## Updating the app on your phone
+
+After a change is merged into `main`, GitHub Pages republishes in a minute or
+two. Close and reopen the app (or pull down to refresh) to get it; GitHub may
+serve the previous copy for up to ~10 minutes. List → ⋯ shows the version you
+have ("App updated …").
+
 ## Editing
 
 Edit `src/app.js` (logic) or `src/template-before.html` (markup), then run:
