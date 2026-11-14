@@ -5,18 +5,24 @@ recipes are saved on the device (browser storage), not on any server.
 
 ## Adding recipes
 
-Recipes tab → **+ Add** → **Paste a link**. The app reads the recipe data most
-sites embed for Google (title, ingredients, steps, time, servings, nutrition),
-sorts the ingredients into aisles, and keeps the link so you can tap
-**Open original** while cooking. If a site can't be read, you can still save
-it as a link with your own title.
+**Recipe library (recommended).** Recipes live in `src/recipes.js`. Send links
+or PDFs to Claude Code and ask for them to be added; after a rebuild and push,
+they appear in the app on every device. Deleting a library recipe in the app
+hides it on that device for good.
 
-Reading another site from a web page needs a small helper on the server, which
-is `functions/api/fetch.js`. It runs automatically when the app is hosted on
-Cloudflare Pages (below). Elsewhere the app falls back to a public relay that
-is often unreliable.
+**In the app.** Recipes tab → **+ Add** → **Paste a link** reads the recipe
+data many sites embed (title, ingredients, steps, time, servings, nutrition).
+Many recipe sites block automated reading, though, and then the app falls back
+to saving a titled link. **Write it yourself** is always available.
 
-## Hosting from a private repo (Cloudflare Pages, free)
+Recipes added in the app are stored only in that browser.
+
+## Hosting
+
+GitHub Pages from a public repo works. `functions/api/fetch.js` only runs
+on Cloudflare Pages, which can also host from a private repo:
+
+### Cloudflare Pages (free, private repo OK)
 
 1. Sign in at dash.cloudflare.com → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.
 2. Authorize GitHub and pick this repo (private is fine).

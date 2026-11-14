@@ -190,8 +190,14 @@ class Component extends DCLogic {
   }
 
   componentDidMount(){
-    try{const raw=localStorage.getItem('marketlist.v2');if(raw){const d=JSON.parse(raw);
-      this.setState({items:d.items||this.state.items,sections:d.sections||this.state.sections,recipes:d.recipes||this.state.recipes,dayLog:d.dayLog||this.state.dayLog});}}catch(e){}
+    let d={};
+    try{const raw=localStorage.getItem('marketlist.v2');if(raw) d=JSON.parse(raw)||{};}catch(e){}
+    // Merge in library recipes this device hasn't seen yet (and hasn't deleted).
+    const recipes=d.recipes||this.state.recipes, removedLib=d.removedLib||[];
+    const have=new Set(recipes.map(r=>r.id));
+    const fresh=(typeof RECIPE_LIBRARY!=='undefined'?RECIPE_LIBRARY:[]).filter(r=>!have.has(r.id)&&!removedLib.includes(r.id));
+    this.setState({items:d.items||this.state.items,sections:d.sections||this.state.sections,
+      recipes:[...recipes,...fresh.map(r=>JSON.parse(JSON.stringify(r)))],dayLog:d.dayLog||this.state.dayLog,removedLib});
     this._ts=e=>{const t=e.touches[0];this._sx=t.clientX;this._sy=t.clientY;};
     this._te=e=>{
       if(this._sx==null) return;
@@ -203,7 +209,7 @@ class Component extends DCLogic {
     window.addEventListener('touchend',this._te,{passive:true});
   }
   componentDidUpdate(){
-    try{const s=this.state;localStorage.setItem('marketlist.v2',JSON.stringify({items:s.items,sections:s.sections,recipes:s.recipes,dayLog:s.dayLog}));}catch(e){}
+    try{const s=this.state;localStorage.setItem('marketlist.v2',JSON.stringify({items:s.items,sections:s.sections,recipes:s.recipes,dayLog:s.dayLog,removedLib:s.removedLib||[]}));}catch(e){}
   }
   componentWillUnmount(){
     window.removeEventListener('touchstart',this._ts);
@@ -273,7 +279,7 @@ class Component extends DCLogic {
   deleteRecipe=()=>{
     if(!this.state.confirmDelete) return this.set({confirmDelete:true});
     const id=this.state.activeRecipe;
-    this.setState(st=>({recipes:st.recipes.filter(r=>r.id!==id),view:null,activeRecipe:null,recipeMenu:false,confirmDelete:false,
+    this.setState(st=>({recipes:st.recipes.filter(r=>r.id!==id),removedLib:id.startsWith('lib-')?[...(st.removedLib||[]),id]:(st.removedLib||[]),view:null,activeRecipe:null,recipeMenu:false,confirmDelete:false,
       dayLog:st.dayLog.filter(d=>d.rid!==id)}));
   };
   addRecipeToList=()=>{
@@ -340,8 +346,8 @@ class Component extends DCLogic {
     const s=this.state;
     const behave=this.props.checkoffStyle||'Drop to bottom of section';
     const showNutrition=this.props.showNutrition!==false;
-    const qtyLabel=i=>(i.unit?(/^\d/.test(i.unit)?i.unit:i.qty+' '+i.unit):String(i.qty));
-    const lineCost=i=>(i.price||0)*(i.unit&&/^\d/.test(i.unit)?1:i.qty);
+    const qtyLabel=i=>(i.unit?(/^[\d½¼¾⅓⅔⅛⅜⅝⅞]/.test(i.unit)?i.unit:i.qty+' '+i.unit):String(i.qty));
+    const lineCost=i=>(i.price||0)*(i.unit&&/^[\d½¼¾⅓⅔⅛⅜⅝⅞]/.test(i.unit)?1:i.qty);
 
     const buildGroups=shop=>s.sections.map(sec=>{
       let list=s.items.filter(i=>i.sec===sec.id);
@@ -378,7 +384,7 @@ class Component extends DCLogic {
     const eid=ei.id;
     const ed={
       name:ei.name, qty:String(ei.qty),
-      unitNote:ei.unit?(/^\d/.test(ei.unit)?'Recipe amount: '+ei.unit:'Counted in '+ei.unit+'s'):'Plain count',
+      unitNote:ei.unit?(/^[\d½¼¾⅓⅔⅛⅜⅝⅞]/.test(ei.unit)?'Recipe amount: '+ei.unit:'Counted in '+ei.unit+'s'):'Plain count',
       price:ei.price?String(ei.price):'',
       lineTotal:ei.price?money(lineCost(ei))+' total':'No price set',
       inc:()=>eid&&this.patch(eid,{qty:ei.qty+1}),

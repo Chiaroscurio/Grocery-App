@@ -3,16 +3,17 @@
 
 The app is a self-contained bundle: index.html carries the fonts and React
 inline, plus a JSON-encoded page template. This script swaps in the template
-assembled from src/template-before.html + src/app.js + src/template-after.html.
+assembled from src/template-before.html + src/recipes.js + src/app.js + src/template-after.html.
 Run:  python3 build.py
 """
 import json, pathlib, sys
 
 root = pathlib.Path(__file__).parent
 src = root / 'src'
-template = ''.join((src / n).read_text() for n in ('template-before.html', 'app.js', 'template-after.html'))
-if '</script>' in (src / 'app.js').read_text():
-    sys.exit('src/app.js must not contain a literal </script>')
+template = ''.join((src / n).read_text() for n in ('template-before.html', 'recipes.js', 'app.js', 'template-after.html'))
+for n in ('recipes.js', 'app.js'):
+    if '</script>' in (src / n).read_text():
+        sys.exit(f'src/{n} must not contain a literal </script>')
 
 page = root / 'index.html'
 lines = page.read_text().split('\n')
