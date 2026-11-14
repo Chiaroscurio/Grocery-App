@@ -635,6 +635,39 @@ const RECIPE_LIBRARY=[
     {id:'r2',kind:'check',title:'Can\'t find tomato basil bagels?',text:'Use a plain or everything bagel and add a few fresh basil leaves with the greens — it gets you most of the way there.'},
     {id:'r3',kind:'check',title:'Keep the greens crisp',text:'Hot egg wilts greens on contact. Keep the tomato between the egg and the greens, and dry the greens well.'}
    ],
+      logs:[],adj:[]},
+
+  {id:'lib-cheesy-veggie-omelette',title:'Creamy Cheesy Veggie Omelette',
+   source:'Mine',url:'',
+   time:'20 min',servings:1,tags:['breakfast','vegetarian','eggs','mine'],
+   ing:[
+    {a:'3',n:'eggs',s:'dairy',p:0},
+    {a:'2 tbsp',n:'heavy cream or whole milk',s:'dairy',p:0},
+    {a:'¼',n:'red bell pepper, diced',s:'produce',p:0},
+    {a:'¼',n:'small onion, diced',s:'produce',p:0},
+    {a:'3',n:'cremini mushrooms, diced',s:'produce',p:0},
+    {a:'1 handful',n:'baby spinach, chopped',s:'produce',p:0},
+    {a:'¼ cup',n:'cherry tomatoes, quartered',s:'produce',p:0},
+    {a:'1 oz',n:'cream cheese (or Boursin), in small pieces',s:'dairy',p:0},
+    {a:'¼ cup',n:'shredded sharp cheddar or Gruyère',s:'dairy',p:0},
+    {a:'1 tbsp',n:'butter',s:'dairy',p:0},
+    {a:'1 tbsp',n:'chives or green onion, sliced',s:'produce',p:0},
+    {a:'',n:'salt and pepper',s:'pantry',p:0}
+   ],
+   steps:[
+    'Cook the veggies: melt half the butter in an 8–10" non-stick pan over medium. Add onion, bell pepper and mushrooms with a pinch of salt; cook until soft and the liquid has cooked off, 5–6 minutes. Stir in the spinach and tomatoes until the spinach wilts, 1 minute. Move to a plate and wipe the pan.',
+    'Beat the eggs with the cream, a pinch of salt and pepper until no streaks of white remain.',
+    'Melt the rest of the butter over medium-low. Pour in the eggs and stir gently with a spatula for 20–30 seconds, then let them set, lifting the edges so loose egg runs underneath, until the top is just barely wet, 2–3 minutes.',
+    'Dot the cream cheese over one half, scatter the veggies and cheddar on top, cover for 30 seconds to start the melt.',
+    'Fold the empty half over the filling, slide onto a plate and top with chives.'
+   ],
+   nut:{kcal:690,protein:33,carbs:12,fat:56,fiber:3,est:true},
+   recs:[
+    {id:'r1',kind:'check',title:'Cook the water out of the veggies first',text:'Raw mushrooms, tomatoes and spinach release water into the eggs and make a weepy omelette. Sautéing them first (step 1) is the fix — don\'t skip it.'},
+    {id:'r2',kind:'check',title:'Low heat keeps it creamy',text:'High heat makes rubbery, browned eggs. Medium-low and pulling it while the top is still slightly glossy gives a soft, custardy center; the filling finishes the cooking.'},
+    {id:'r3',kind:'check',title:'Lighter version',text:'Nutrition is estimated. Using milk instead of cream and 2 eggs + 2 whites brings it to about 450 kcal with the same protein.',
+     change:{label:'Lighter',ing:[[0,{a:'2 + 2 whites',n:'eggs',s:'dairy'}],[1,{a:'2 tbsp',n:'whole milk',s:'dairy'}]]}}
+   ],
    logs:[],adj:[]}
 ];
 
