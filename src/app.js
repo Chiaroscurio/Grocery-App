@@ -246,6 +246,57 @@ function addIngredientsToItems(items,entries){
 }
 const cookable=r=>!r.linkOnly&&r.ing&&r.ing.length>0;
 const mealNut=r=>{const m=r.mealServings||1,n=r.nut||{};return {kcal:(n.kcal||0)*m,protein:(n.protein||0)*m,carbs:(n.carbs||0)*m,fat:(n.fat||0)*m,fiber:(n.fiber||0)*m};};
+// ---- Kitchen: shelf life ----
+// Typical fridge/pantry days after purchase; first match wins. Rough guides, not food-safety rules.
+const SHELF=[
+  [/\b(chicken|turkey|ground|shrimp|fish|salmon|sausage)\b/,2],[/\b(steak|beef|pork|lamb)\b/,4],
+  [/\b(spinach|arugula|mixed greens|spring mix|basil|cilantro|mint|parsley|dill|chives|berries|raspberr|strawberr|mushroom)/,5],
+  [/\b(avocado|lettuce|romaine|green onion|scallion|asparagus|zucchini|broccoli|kale|leek|bean sprouts|corn on)/,6],
+  [/\b(tomato|cucumber|pepper|poblano|jalape|mango|eggplant|grape|peach|banana|squash|lemon|lime)/,8],
+  [/\b(carrot|celery|cabbage|apple|orange|beet)/,21],[/\b(onion|shallot|potato|sweet potato|garlic|ginger)/,30],
+  [/\b(milk|cream|half and half|buttermilk)\b/,7],[/\b(mozzarella|ricotta|goat cheese|burrata|feta|cottage|cream cheese)/,7],
+  [/\b(tofu|tempeh|hummus|pesto|fresh pasta|gnocchi)\b/,7],[/\b(yogurt|sour cream)\b/,14],
+  [/\b(cheddar|oaxaca|fontina|jack|swiss|provolone|pecorino|parmesan|parmigiano)/,28],[/\b(butter|eggs?)\b/,28],
+  [/\b(bread|rolls?|ciabatta|baguette|buns?|bagels?)\b/,5],[/\b(tortillas?|pita|naan)\b/,14]
+];
+const SEC_DAYS={produce:7,dairy:10,meat:3,bakery:5,canned:365,pantry:180,frozen:90,snacks:60,beverages:30,other:14};
+function estimateDays(name,sec){
+  const n=' '+name.toLowerCase()+' ';
+  if(sec==='frozen'||/\bfrozen\b/.test(n)) return 90;
+  if(sec==='canned'||/\b(canned|can of|jar)\b/.test(n)){ if(!/\b(pesto|hummus)\b/.test(n)) return 365; }
+  for(const [re,d] of SHELF) if(re.test(n)) return d;
+  return SEC_DAYS[sec]||14;
+}
+const isoDay=d=>{const x=new Date(d);x.setMinutes(x.getMinutes()-x.getTimezoneOffset());return x.toISOString().slice(0,10);};
+const addDays=(iso,n)=>{const d=new Date(iso+'T12:00:00');d.setDate(d.getDate()+n);return isoDay(d);};
+const daysUntil=iso=>Math.round((new Date(iso+'T12:00:00')-new Date(isoDay(new Date())+'T12:00:00'))/86400000);
+const shortDate=iso=>new Date(iso+'T12:00:00').toLocaleDateString(undefined,{month:'short',day:'numeric'});
+function kitchenItem(name,sec,bought){
+  const b=bought||isoDay(new Date());
+  return {id:uid('k'),name,sec:sec||'other',bought:b,expires:addDays(b,estimateDays(name,sec)),est:true};
+}
+// ---- Paste recipe text ----
+function parseRecipeText(text){
+  const lines=text.split(/\r?\n/).map(l=>l.replace(/^[\s•*\-–▢☐□◦·]+/,'').replace(/^\d+[.)]\s+(?=[A-Za-z])/,'').trim()).filter(Boolean);
+  const H_ING=/^(ingredients?|for the [\w\s]+:?|you('|’)ll need|what you need)\s*:?$/i;
+  const H_STEP=/^(instructions?|directions?|method|steps?|preparation|how to make( it)?)\s*:?$/i;
+  const H_STOP=/^(notes?|nutrition|tips?|equipment|storage|video)\b.*$/i;
+  let title='',mode='',ing=[],steps=[];
+  lines.forEach((l,i)=>{
+    if(H_ING.test(l)){ mode='ing'; return; }
+    if(H_STEP.test(l)){ mode='step'; return; }
+    if(H_STOP.test(l)&&l.length<40){ mode='stop'; return; }
+    if(!mode){ if(!title&&l.length<90) title=l; else if(QTY_RE.test(l)&&l.length<80) ing.push(l); else if(l.length>60) steps.push(l); return; }
+    if(mode==='ing'){ if(/^for the /i.test(l)&&l.length<40) return; ing.push(l); }
+    else if(mode==='step') steps.push(l);
+  });
+  const ings=ing.map(splitIngredient).filter(g=>g.n).map(g=>({a:g.a,n:g.n,s:importSection(g),p:0}));
+  const tm=/(?:total|ready in)[^\d]{0,12}(\d+\s*(?:hours?|hrs?|minutes?|mins?)(?:\s*\d+\s*(?:minutes?|mins?))?)/i.exec(text);
+  const yl=/(?:serves|servings|yield)[^\d]{0,6}(\d+)/i.exec(text);
+  return {title:title.replace(/\s*(recipe)?\s*$/i,''),url:'',time:tm?tm[1].replace(/minutes?|mins?/i,'min').replace(/hours?|hrs?/i,'hr'):'',
+    servings:yl?+yl[1]:4,ing:ings,steps,nut:{kcal:0,protein:0,carbs:0,fat:0,fiber:0},partial:!ings.length};
+}
+
 const pickRandom=a=>a.length?a[Math.floor(Math.random()*a.length)]:null;
 
 class Component extends DCLogic {
@@ -257,7 +308,7 @@ class Component extends DCLogic {
       ingSel:{}, justAdded:'', recipeMenu:false, confirmDelete:false, confirmClear:false,
       cookRating:4, cookIssues:[], cookNote:'', cookApplied:[],
       imUrl:'', imState:'idle', imDraft:null, imErr:'', suggestion:null,
-      viewVer:null, showDismissed:false, recQuery:'', plan:[null,null,null,null,null,null,null], pickDay:null, pickQuery:'', weekMsg:'',
+      viewVer:null, showDismissed:false, recQuery:'', plan:[null,null,null,null,null,null,null], pickDay:null, pickQuery:'', weekMsg:'', kitchen:[], kDraft:'', imText:'',
       mnTitle:'', mnServings:'', mnTime:'', mnSteps:'',
       mnRows:[{id:'r1',amount:'',name:''},{id:'r2',amount:'',name:''},{id:'r3',amount:'',name:''}],
       sections:[
@@ -286,10 +337,17 @@ class Component extends DCLogic {
       return {...r,recs:clone(L.recs||[]),tags:L.tags||r.tags,mealServings:L.mealServings,linkOnly:L.linkOnly,url:r.url||L.url};
     });
     const have=new Set(recipes.map(r=>r.id));
-    recipes=[...recipes,...LIB.filter(r=>!have.has(r.id)&&!removedLib.includes(r.id)).map(clone)].map(withV1);
+    recipes=[...recipes,...LIB.filter(r=>!have.has(r.id)&&!removedLib.includes(r.id)).map(r=>{
+      let x=withV1(clone(r));
+      (r.autoApply||[]).forEach(rid=>{const c=(r.recs||[]).find(z=>z.id===rid); if(!c||!c.change) return;
+        const nr=applyChange(x,c.change), v=snap(nr,'Applied: '+c.change.label);
+        x={...nr,versions:[...x.versions,v],recState:{...(x.recState||{}),[rid]:{st:'applied',ver:v.id}}};});
+      return x;
+    })].map(withV1);
+    const kitchen=Array.isArray(d.kitchen)?d.kitchen:[];
     const plan=Array.isArray(d.plan)&&d.plan.length===7?d.plan.map(id=>recipes.some(r=>r.id===id)?id:null):this.state.plan;
     this.setState({items:d.items||this.state.items,sections:d.sections||this.state.sections,
-      recipes,dayLog:d.dayLog||this.state.dayLog,removedLib,plan});
+      recipes,dayLog:d.dayLog||this.state.dayLog,removedLib,plan,kitchen});
     this._ts=e=>{const t=e.touches[0];this._sx=t.clientX;this._sy=t.clientY;};
     this._te=e=>{
       if(this._sx==null) return;
@@ -301,7 +359,7 @@ class Component extends DCLogic {
     window.addEventListener('touchend',this._te,{passive:true});
   }
   componentDidUpdate(){
-    try{const s=this.state;localStorage.setItem('marketlist.v2',JSON.stringify({items:s.items,sections:s.sections,recipes:s.recipes,dayLog:s.dayLog,removedLib:s.removedLib||[],plan:s.plan}));}catch(e){}
+    try{const s=this.state;localStorage.setItem('marketlist.v2',JSON.stringify({items:s.items,sections:s.sections,recipes:s.recipes,dayLog:s.dayLog,removedLib:s.removedLib||[],plan:s.plan,kitchen:s.kitchen}));}catch(e){}
   }
   componentWillUnmount(){
     window.removeEventListener('touchstart',this._ts);
@@ -352,7 +410,10 @@ class Component extends DCLogic {
   }
   finishShop=()=>{
     const sug=this.detectSuggestion();
-    this.setState(st=>({items:st.items.filter(i=>!i.checked),shopping:false,view:sug?'suggest':null,suggestion:sug}));
+    this.setState(st=>{
+      const bought=st.items.filter(i=>i.checked&&i.sec!=='house').map(i=>kitchenItem(i.name,i.sec));
+      return {items:st.items.filter(i=>!i.checked),kitchen:[...bought,...st.kitchen],shopping:false,view:sug?'suggest':null,suggestion:sug};
+    });
   };
   applySuggestion=()=>{
     const sg=this.state.suggestion; if(!sg) return;
@@ -365,7 +426,7 @@ class Component extends DCLogic {
 
   openRecipe(id){
     const r=this.recipe(id); const sel={};
-    r.ing.forEach((g,i)=>{sel[id+'-'+i]=true;});
+    r.ing.forEach((g,i)=>{sel[id+'-'+i]=!g.h;});
     this.set({view:'recipe',activeRecipe:id,ingSel:sel,justAdded:'',recipeMenu:false,confirmDelete:false,viewVer:null});
   }
   deleteRecipe=()=>{
@@ -391,7 +452,7 @@ class Component extends DCLogic {
     return v?{...r,ing:v.ing,steps:v.steps,time:v.time,servings:v.servings,adj:v.adj||[]}:r;
   }
   updRecipe(id,fn){ this.setState(s=>({recipes:s.recipes.map(r=>r.id===id?fn(r):r)})); }
-  allSelected(r){ const o={}; r.ing.forEach((g,i)=>{o[r.id+'-'+i]=true;}); return o; }
+  allSelected(r){ const o={}; r.ing.forEach((g,i)=>{o[r.id+'-'+i]=!g.h;}); return o; }
   applyRec(rec){
     const id=this.state.activeRecipe;
     this.updRecipe(id,r=>{
@@ -426,6 +487,18 @@ class Component extends DCLogic {
     const r=this.recipe(id), v=r.versions.find(x=>x.id===vid);
     this.set({viewVer:null,ingSel:this.allSelected({...r,ing:v.ing})});
   }
+  addKitchen=()=>{
+    const n=this.state.kDraft.trim(); if(!n) return;
+    const name=n.charAt(0).toUpperCase()+n.slice(1);
+    this.setState(st=>({kitchen:[kitchenItem(name,guessSection(n)),...st.kitchen],kDraft:''}));
+  };
+  updKitchen(id,patch){ this.setState(st=>({kitchen:st.kitchen.map(k=>k.id===id?{...k,...patch}:k)})); }
+  readPastedText=()=>{
+    const t=this.state.imText.trim(); if(!t) return;
+    const d=parseRecipeText(t); d.url=this.state.imUrl.trim()?(/^https?:/i.test(this.state.imUrl.trim())?this.state.imUrl.trim():'https://'+this.state.imUrl.trim()):'';
+    this.set({imState:'done',imDraft:d,imErr:''});
+  };
+  toggleFav=()=>this.updRecipe(this.state.activeRecipe,r=>({...r,fav:!r.fav}));
   surpriseMe=()=>{ const r=pickRandom(this.state.recipes.filter(cookable)); if(r) this.openRecipe(r.id); };
   // ---- week plan ----
   setPlan(i,rid){ this.setState(s=>{const plan=[...s.plan]; plan[i]=rid; return {plan,weekMsg:''};}); }
@@ -443,11 +516,11 @@ class Component extends DCLogic {
   };
   shopWeek=()=>{
     const s=this.state, entries=[];
-    s.plan.forEach(rid=>{ const r=this.recipe(rid); if(!r) return; r.ing.forEach(g=>{ if(!STAPLE_RE.test(g.n.trim())) entries.push({g,title:r.title}); }); });
+    s.plan.forEach(rid=>{ const r=this.recipe(rid); if(!r) return; r.ing.forEach(g=>{ if(!g.h&&!STAPLE_RE.test(g.n.trim())) entries.push({g,title:r.title}); }); });
     if(!entries.length) return this.set({weekMsg:'Plan a few dinners first.'});
     const before=s.items.length, items=addIngredientsToItems(s.items,entries);
     const added=items.length-before, merged=entries.length-added;
-    this.set({items,weekMsg:added+' items added to the list'+(merged?', '+merged+' merged with ones already there':'')+'. Salt, pepper and water skipped.'});
+    this.set({items,weekMsg:added+' items added to the list'+(merged?', '+merged+' merged with ones already there':'')+'. Salt, pepper, water and things you usually have on hand were skipped.'});
   };
 
   submitCook=()=>this.set({view:'fixes',cookApplied:[...this.state.cookIssues]});
@@ -482,10 +555,10 @@ class Component extends DCLogic {
   };
   saveImport=()=>{
     const d=this.state.imDraft; if(!d) return;
-    const host=(d.url.replace(/^https?:\/\//,'').split('/')[0]||'web').replace(/^www\./,'');
+    const host=d.url?(d.url.replace(/^https?:\/\//,'').split('/')[0]||'web').replace(/^www\./,''):'pasted text';
     const r={id:uid('rc'),title:(d.title||'').trim()||host,source:host,url:d.url,time:d.time||'—',servings:d.servings||4,
       ing:d.ing,steps:d.steps,nut:d.nut,logs:[],adj:[]};
-    this.setState(s=>({recipes:[withV1(r),...s.recipes],view:null,imUrl:'',imState:'idle',imDraft:null,imErr:'',tab:'recipes'}));
+    this.setState(s=>({recipes:[withV1(r),...s.recipes],view:null,imUrl:'',imText:'',imState:'idle',imDraft:null,imErr:'',tab:'recipes'}));
   };
   saveManual=()=>{
     const t=this.state.mnTitle.trim(); if(!t) return;
@@ -531,9 +604,9 @@ class Component extends DCLogic {
     const estTotal=money(s.items.reduce((a,i)=>a+lineCost(i),0));
     const cartTotal=money(s.items.filter(i=>i.checked).reduce((a,i)=>a+lineCost(i),0));
 
-    const tabs=[['list','LIST'],['recipes','RECIPES'],['week','WEEK'],['today','TODAY']].map(([id,label])=>{
+    const tabs=[['list','LIST'],['recipes','RECIPES'],['week','WEEK'],['kitchen','KITCHEN'],['today','TODAY']].map(([id,label])=>{
       const on=s.tab===id;
-      return {label,sub:id==='list'?total+' items':id==='recipes'?s.recipes.length+' saved':id==='week'?s.plan.filter(Boolean).length+'/7 planned':'kcal',
+      return {label,sub:id==='list'?total+' items':id==='recipes'?s.recipes.length+' saved':id==='week'?s.plan.filter(Boolean).length+'/7':id==='kitchen'?(s.kitchen.filter(k=>daysUntil(k.expires)<=3).length?s.kitchen.filter(k=>daysUntil(k.expires)<=3).length+' soon':s.kitchen.length+' items'):'kcal',
         line:on?RED:'transparent',color:on?RED:'rgba(26,23,18,0.45)',subColor:on?'rgba(185,58,38,0.7)':'rgba(26,23,18,0.3)',
         go:()=>this.set({tab:id,view:null,shopping:false})};
     });
@@ -568,13 +641,14 @@ class Component extends DCLogic {
 
     const recipeCost=r=>r.ing.reduce((a,g)=>a+(g.p||0),0);
     const q=s.recQuery.trim().toLowerCase();
-    const matches=r=>!q||[r.title,r.source,(r.tags||[]).join(' '),r.ing.map(g=>g.n).join(' ')].join(' ').toLowerCase().includes(q);
+    const matches=r=>q==='★ favorites'?!!r.fav:!q||[r.title,r.source,(r.tags||[]).join(' '),r.ing.map(g=>g.n).join(' ')].join(' ').toLowerCase().includes(q);
     const tagCount={}; s.recipes.forEach(r=>(r.tags||[]).forEach(t=>{tagCount[t]=(tagCount[t]||0)+1;}));
-    const tagChips=Object.keys(tagCount).sort((a,b)=>tagCount[b]-tagCount[a]||a.localeCompare(b)).slice(0,12).map(t=>{
+    const favN=s.recipes.filter(r=>r.fav).length;
+    const tagChips=(favN?['★ favorites']:[]).concat(Object.keys(tagCount).sort((a,b)=>tagCount[b]-tagCount[a]||a.localeCompare(b)).slice(0,12)).map(t=>{
       const on=q===t; return {label:t,bg:on?INK:'transparent',color:on?CREAM:INK,go:()=>this.set({recQuery:on?'':t})};});
-    const recipeCards=s.recipes.filter(matches).map(r=>{
+    const recipeCards=s.recipes.filter(matches).sort((a,b)=>(b.fav?1:0)-(a.fav?1:0)).map(r=>{
       const last=r.logs[0], c=recipeCost(r);
-      return {id:r.id,title:r.title,kcal:r.nut.kcal?String(r.nut.kcal):'—',
+      return {id:r.id,title:(r.fav?'★ ':'')+r.title,kcal:r.nut.kcal?String(r.nut.kcal):'—',
         cost:c?money(c):'—',meta:r.time+' · '+r.servings+' servings · '+r.source,
         dots:this.dots(last?last.rating:0),lastNote:r.linkOnly?'link only — ingredients to add':last?'cooked '+last.date:'not cooked yet',
         tileBg:last&&last.rating>=4?'#F7EBCF':'#FFFDF6',open:()=>this.openRecipe(r.id)};
@@ -601,7 +675,8 @@ class Component extends DCLogic {
       delBg:s.confirmDelete?RED:'transparent',delColor:s.confirmDelete?CREAM:RED,del:this.deleteRecipe,
       ingredients:ar.ing.map((g,i)=>{
         const key=ar.id+'-'+i,on=s.ingSel[key]!==false;
-        const tag=orig?tagFor(ingText(g),orig.ing[i]?ingText(orig.ing[i]):'',i,orig.ing.length):'';
+        const vtag=orig?tagFor(ingText(g),orig.ing[i]?ingText(orig.ing[i]):'',i,orig.ing.length):'';
+        const tag=[vtag,g.h?'ON HAND':''].filter(Boolean).join(' · ');
         return {tag,hasTag:!!tag,text:(g.a?g.a+' ':'')+g.n,icon:this.secIcon(g.s,17),priceLabel:g.p?money(g.p):'',on,
           boxBg:on?RED:'transparent',boxBorder:on?RED:'rgba(26,23,18,0.35)',
           toggle:()=>this.setState(st=>({ingSel:{...st.ingSel,[key]:st.ingSel[key]===false}}))};
@@ -611,7 +686,7 @@ class Component extends DCLogic {
       addLabel:selCount?'ADD '+selCount+' TO LIST':'PICK INGREDIENTS',
       addToList:this.addRecipeToList,justAdded:!!s.justAdded,addedMsg:s.justAdded,
       steps:ar.steps.map((t,i)=>{const tag=orig?tagFor(t,orig.steps[i]||'',i,orig.steps.length):'';return {n:String(i+1),text:t,tag,hasTag:!!tag};}),
-      linkOnly:!!base.linkOnly,
+      linkOnly:!!base.linkOnly,fav:!!base.fav,favLabel:base.fav?'★':'☆',favColor:base.fav?MUST:'rgba(26,23,18,0.4)',toggleFav:this.toggleFav,
       viewingOld,verBanner:viewingOld?'Viewing v'+(viewIdx+1)+' · '+vers[viewIdx].label+' · '+vers[viewIdx].date:'',
       backToCurrent:()=>this.set({viewVer:null}),restoreThis:()=>this.restoreVersion(s.viewVer),
       versions:vers.map((v,i)=>{const cur=i===vers.length-1, viewing=viewingOld?v.id===s.viewVer:cur;
@@ -623,9 +698,9 @@ class Component extends DCLogic {
       dismissedLabel:s.showDismissed?'HIDE DISMISSED':'SHOW DISMISSED',
       toggleDismissed:()=>this.set({showDismissed:!s.showDismissed}),
       recs:(base.recs||[]).filter(c=>s.showDismissed||(recState[c.id]||{}).st!=='dismissed').map(c=>{
-        const st=recState[c.id], reviews=c.kind==='reviews';
+        const st=recState[c.id], reviews=c.kind==='reviews', mine=c.kind==='mine';
         const status=!st?'':st.st==='applied'?'✓ Applied as '+verNum(st.ver)+' — undo from history':st.st==='pinned'?'✓ Pinned to your adjustments':'Dismissed · tap to restore';
-        return {kindLabel:reviews?'What reviewers say':'From reading the recipe',accent:reviews?'#3F7A8C':'#8A6A14',
+        return {kindLabel:mine?'Your version':reviews?'What reviewers say':'From reading the recipe',accent:mine?RED:reviews?'#3F7A8C':'#8A6A14',
           title:c.title,text:c.text,fade:st&&st.st==='dismissed'?0.55:1,
           canApply:!st&&!!c.change&&!viewingOld,applyLabel:c.change?'Apply: '+c.change.label:'',apply:()=>this.applyRec(c),
           canPin:!st&&!c.change&&!viewingOld,pin:()=>this.pinRec(c),
@@ -672,6 +747,7 @@ class Component extends DCLogic {
       loading:s.imState==='loading',done:(s.imState==='done'||s.imState==='error')&&!!imd,
       error:s.imState==='error',errText:s.imErr,
       partial:s.imState==='done'&&!!imd&&imd.partial,
+      text:s.imText,onText:e=>this.set({imText:e.target.value}),readText:this.readPastedText,
       found:s.imState==='done'&&!!imd&&!imd.partial,
       title:imd?imd.title:'',onTitle:e=>this.setState(st=>({imDraft:{...st.imDraft,title:e.target.value}})),
       meta:imd?[imd.time,imd.servings+' servings',imd.ing.length?imd.ing.length+' ingredients':''].filter(Boolean).join(' · '):'',
@@ -722,13 +798,33 @@ class Component extends DCLogic {
       nutNote:withNut.length?'Average per planned dinner, from '+withNut.length+' of '+planned.length+' with nutrition info'+(fiberN<withNut.length?' (fiber listed for '+fiberN+')':'')+'. Tacos and spring rolls count as 3 per meal.':'',
       hasSwaps:swaps.length>0,swaps:swaps.map(x=>({text:x.text,canSwap:!!x.go,go:x.go||(()=>{})}))
     };
+    const kSorted=[...s.kitchen].sort((a,b)=>a.expires.localeCompare(b.expires));
+    const soon=kSorted.filter(k=>daysUntil(k.expires)<=3);
+    const useIt=soon.length?s.recipes.filter(cookable).map(r=>{
+      const hits=soon.filter(k=>{const kk=itemKey(k.name);return r.ing.some(g=>{const gk=itemKey(g.n);return gk.includes(kk)||kk.includes(gk);});});
+      return {r,hits};}).filter(x=>x.hits.length).sort((a,b)=>b.hits.length-a.hits.length).slice(0,3):[];
+    const kt={
+      draft:s.kDraft,onDraft:e=>this.set({kDraft:e.target.value}),onKey:e=>{ if(e.key==='Enter') this.addKitchen(); },add:this.addKitchen,
+      empty:!s.kitchen.length,
+      summary:s.kitchen.length?(soon.length?soon.length+' to use in the next 3 days':'Nothing needs using up this week'):'',
+      items:kSorted.map(k=>{const d=daysUntil(k.expires);
+        return {name:k.name,expires:k.expires,
+          sub:'Bought '+shortDate(k.bought)+' · use by '+shortDate(k.expires)+(k.est?' (estimate)':''),
+          left:d<0?(-d)+'d ago':d===0?'today':d===1?'1 day':d>60?Math.round(d/30)+' mo':d+' days',
+          badgeBg:d<=1?RED:d<=3?MUST:d<=7?'#E2EDE5':'rgba(26,23,18,0.07)',badgeColor:d<=1?CREAM:d<=3?INK:d<=7?'#23543D':'rgba(26,23,18,0.55)',
+          onDate:e=>{ if(e.target.value) this.updKitchen(k.id,{expires:e.target.value,est:false}); },
+          plus:()=>this.updKitchen(k.id,{expires:addDays(k.expires,2),est:false}),
+          used:()=>this.setState(st=>({kitchen:st.kitchen.filter(x=>x.id!==k.id)}))};}),
+      hasUse:useIt.length>0,
+      use:useIt.map(x=>({title:x.r.title,uses:'Uses '+x.hits.map(k=>k.name.toLowerCase()).join(', '),open:()=>this.openRecipe(x.r.id)}))
+    };
     const pq=s.pickQuery.trim().toLowerCase();
     const pk={
       title:s.pickDay!=null?DAY_NAMES[s.pickDay]:'',query:s.pickQuery,onQuery:e=>this.set({pickQuery:e.target.value}),
       surprise:()=>{ if(s.pickDay==null) return; this.setPlan(s.pickDay,this.randomFor(s.plan,s.pickDay)); this.closeSheet(); },
-      items:s.recipes.filter(cookable).filter(r=>!pq||[r.title,(r.tags||[]).join(' ')].join(' ').toLowerCase().includes(pq)).map(r=>{
+      items:s.recipes.filter(cookable).sort((a,b)=>(b.fav?1:0)-(a.fav?1:0)).filter(r=>!pq||[r.title,(r.tags||[]).join(' ')].join(' ').toLowerCase().includes(pq)).map(r=>{
         const on=s.pickDay!=null&&s.plan[s.pickDay]===r.id;
-        return {title:r.title,meta:[r.time,r.nut&&r.nut.kcal?Math.round(mealNut(r).kcal)+' kcal':'',r.nut&&r.nut.protein?Math.round(mealNut(r).protein)+'g protein':''].filter(Boolean).join(' · '),
+        return {title:(r.fav?'★ ':'')+r.title,meta:[r.time,r.nut&&r.nut.kcal?Math.round(mealNut(r).kcal)+' kcal':'',r.nut&&r.nut.protein?Math.round(mealNut(r).protein)+'g protein':''].filter(Boolean).join(' · '),
           border:on?RED:'rgba(26,23,18,0.16)',pick:()=>{ this.setPlan(s.pickDay,r.id); this.closeSheet(); }};})
     };
 
@@ -758,8 +854,8 @@ class Component extends DCLogic {
     return {
       tabList:s.tab==='list',tabRecipes:s.tab==='recipes',tabToday:s.tab==='today',
       shopping:s.shopping,notShopping:!s.shopping,showNutrition,
-      headKicker:s.tab==='list'?(total+' items · '+s.sections.length+' aisles'):s.tab==='recipes'?'Saved and importable':s.tab==='week'?(s.plan.filter(Boolean).length+' of 7 dinners planned'):new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'}),
-      headTitle:s.tab==='list'?'GROCERIES':s.tab==='recipes'?'RECIPES':s.tab==='week'?'THIS WEEK':'TODAY',
+      headKicker:s.tab==='list'?(total+' items · '+s.sections.length+' aisles'):s.tab==='recipes'?'Saved and importable':s.tab==='week'?(s.plan.filter(Boolean).length+' of 7 dinners planned'):s.tab==='kitchen'?'What you have, and what to use first':new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'}),
+      headTitle:s.tab==='list'?'GROCERIES':s.tab==='recipes'?'RECIPES':s.tab==='week'?'THIS WEEK':s.tab==='kitchen'?'KITCHEN':'TODAY',
       tabs,groups,listEmpty:groups.length===0,shopGroups,
       draft:s.draft,onDraft:e=>this.set({draft:e.target.value}),
       onDraftKey:e=>{if(e.key==='Enter')this.addItem();},
@@ -773,7 +869,7 @@ class Component extends DCLogic {
       shopHead:done+' of '+total+' picked',shopPct:(total?Math.round(done/total*100):0)+'%',
       progressLabel:done?done+' of '+total+' picked':'nothing picked yet',
       estTotal,cartTotal,
-      finishLabel:done?'CLEAR '+done+' PICKED '+(done===1?'ITEM':'ITEMS'):'NOTHING PICKED YET',
+      finishLabel:done?'FINISH TRIP · '+done+(done===1?' ITEM':' ITEMS')+' TO KITCHEN':'NOTHING PICKED YET',
       finishShop:this.finishShop,
       openListMenu:()=>this.set({view:'listmenu'}),
       openSections:()=>this.set({view:'sections'}),
@@ -787,7 +883,7 @@ class Component extends DCLogic {
       clearAllSubColor:s.confirmClear?'rgba(247,241,227,0.75)':'rgba(26,23,18,0.55)',
       secRows,newSec:s.newSec,onNewSec:e=>this.set({newSec:e.target.value}),
       addSec:()=>{const n=s.newSec.trim();if(!n)return;this.setState(st=>({sections:[...st.sections,{id:uid('s'),name:n}],newSec:''}));},
-      recipeCards,rd,ck,fx,im,mn,sg,ed,wk,pk,tagChips,
+      recipeCards,rd,ck,fx,im,mn,sg,ed,wk,pk,kt,tagChips,tabKitchen:s.tab==='kitchen',
       recQuery:s.recQuery,onRecQuery:e=>this.set({recQuery:e.target.value}),surpriseMe:this.surpriseMe,recEmpty:recipeCards.length===0,
       tabWeek:s.tab==='week',ovPickMeal:s.view==='pickmeal',
       openNewRecipe:()=>this.set({view:'new'}),

@@ -207,7 +207,7 @@
 </sc-for>
 <div style="padding:20px 16px 10px;display:flex;flex-direction:column;gap:9px">
 <div sc-camel-on-click="{{ finishShop }}" style="padding:16px;border-radius:12px;background:#2E6B4E;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:0.06em;color:#F7F1E3;cursor:pointer">{{ finishLabel }}</div>
-<div style="font:400 12px/1.5 Archivo,sans-serif;color:rgba(26,23,18,0.45);text-align:center">Removes everything checked and keeps the rest for next time.</div>
+<div style="font:400 12px/1.5 Archivo,sans-serif;color:rgba(26,23,18,0.45);text-align:center">Moves everything checked into Kitchen to track freshness, and keeps the rest for next time.</div>
 </div>
 </div>
 </div>
@@ -384,6 +384,49 @@
 </div>
 </sc-if>
 
+<sc-if value="{{ tabKitchen }}">
+<div style="display:flex;flex-direction:column;gap:14px;padding:16px 16px 20px">
+<div style="display:flex;gap:8px;align-items:center">
+<input value="{{ kt.draft }}" sc-camel-on-change="{{ kt.onDraft }}" sc-camel-on-key-down="{{ kt.onKey }}" placeholder="Add something you bought…" style="flex:1;min-width:0;padding:12px 13px;border:1.5px solid rgba(26,23,18,0.2);border-radius:10px;background:#FFFDF6;font:400 14px/1.2 Archivo,sans-serif;color:#1A1712">
+<div sc-camel-on-click="{{ kt.add }}" style="flex:none;width:44px;height:44px;border-radius:999px;background:#B93A26;display:flex;align-items:center;justify-content:center;font:400 24px/1 Archivo,sans-serif;color:#F7F1E3;cursor:pointer">+</div>
+</div>
+<sc-if value="{{ kt.empty }}">
+<div style="padding:26px 16px;border:1.5px dashed rgba(26,23,18,0.22);border-radius:10px;text-align:center;font:400 13px/1.5 Archivo,sans-serif;color:rgba(26,23,18,0.45)">Nothing tracked yet. Items you check off while shopping land here when you finish the trip, with a use-by date estimated from typical shelf life. You can also add things above.</div>
+</sc-if>
+<sc-if value="{{ kt.hasUse }}">
+<div style="display:flex;flex-direction:column;gap:8px;padding:13px;border-radius:11px;background:#F7EBCF;border-left:4px solid #D3A32E">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:0.05em;color:#1A1712">USE IT UP</div>
+<sc-for list="{{ kt.use }}" as="u" hint-placeholder-count="2">
+<div sc-camel-on-click="{{ u.open }}" style="display:flex;flex-direction:column;gap:2px;cursor:pointer">
+<div style="font:600 14px/1.3 Archivo,sans-serif;color:#1A1712;text-decoration:underline">{{ u.title }}</div>
+<div style="font:400 12px/1.4 Archivo,sans-serif;color:#4A3B14">{{ u.uses }}</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ kt.summary }}">
+<div style="font:500 10px/1 Archivo,sans-serif;letter-spacing:0.12em;text-transform:uppercase;color:rgba(26,23,18,0.45)">{{ kt.summary }}</div>
+</sc-if>
+<sc-for list="{{ kt.items }}" as="k" hint-placeholder-count="4">
+<div style="display:flex;flex-direction:column;gap:9px;padding:12px 13px;border:1.5px solid rgba(26,23,18,0.16);border-radius:10px;background:#FFFDF6">
+<div style="display:flex;align-items:center;gap:10px">
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+<div style="font:500 15px/1.25 Archivo,sans-serif;color:#1A1712">{{ k.name }}</div>
+<div style="font:400 11px/1.3 Archivo,sans-serif;color:rgba(26,23,18,0.5)">{{ k.sub }}</div>
+</div>
+<div style="flex:none;padding:6px 9px;border-radius:999px;background:{{ k.badgeBg }};font:700 10px/1 Archivo,sans-serif;letter-spacing:0.06em;text-transform:uppercase;color:{{ k.badgeColor }};">{{ k.left }}</div>
+</div>
+<div style="display:flex;align-items:center;gap:8px">
+<input type="date" value="{{ k.expires }}" sc-camel-on-change="{{ k.onDate }}" style="flex:1;min-width:0;padding:7px 8px;border:1.5px solid rgba(26,23,18,0.2);border-radius:8px;background:#F7F1E3;font:500 12.5px/1.2 Archivo,sans-serif;color:#1A1712">
+<div sc-camel-on-click="{{ k.plus }}" style="flex:none;padding:9px 10px;border-radius:8px;border:1.5px solid rgba(26,23,18,0.25);font:600 11px/1 Archivo,sans-serif;letter-spacing:0.08em;text-transform:uppercase;color:#1A1712;cursor:pointer">+2 days</div>
+<div sc-camel-on-click="{{ k.used }}" style="flex:none;padding:9px 10px;border-radius:8px;background:#1A1712;font:600 11px/1 Archivo,sans-serif;letter-spacing:0.08em;text-transform:uppercase;color:#F7F1E3;cursor:pointer">Used</div>
+</div>
+</div>
+</sc-for>
+<div style="font:400 11.5px/1.5 Archivo,sans-serif;color:rgba(26,23,18,0.45)">Estimates are typical fridge or pantry times from purchase. Set the date from the package when you have one; trust your senses over the estimate.</div>
+</div>
+</sc-if>
+
 <sc-if value="{{ tabToday }}">
 <div style="display:flex;flex-direction:column;gap:16px;padding:16px 16px 20px">
 <div style="border:2px solid #1A1712;border-radius:12px;background:#FFFDF6;padding:16px;display:flex;flex-direction:column;gap:14px">
@@ -447,10 +490,10 @@
 </div>
 </sc-if>
 
-<div style="flex:none;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;border-top:1px solid rgba(26,23,18,0.14);background:#F7F1E3">
+<div style="flex:none;display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid rgba(26,23,18,0.14);background:#F7F1E3">
 <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
 <div sc-camel-on-click="{{ t.go }}" style="padding:11px 4px 13px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;border-top:3px solid transparent;border-top-color:{{ t.line }};">
-<div style="font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:0.07em;color:{{ t.color }};">{{ t.label }}</div>
+<div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.05em;color:{{ t.color }};">{{ t.label }}</div>
 <div style="font:600 9px/1 Archivo,sans-serif;letter-spacing:0.1em;font-variant-numeric:tabular-nums;color:{{ t.subColor }};">{{ t.sub }}</div>
 </div>
 </sc-for>
@@ -614,6 +657,7 @@
 <svg width="24" height="24" sc-camel-view-box="0 0 24 24" fill="none" stroke="#1A1712" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg>
 </div>
 <div style="flex:1"></div>
+<div sc-camel-on-click="{{ rd.toggleFav }}" style="flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;font:400 26px/1 Archivo,sans-serif;color:{{ rd.favColor }};cursor:pointer">{{ rd.favLabel }}</div>
 <div sc-camel-on-click="{{ rd.logToday }}" style="padding:11px 13px;font:600 11px/1 Archivo,sans-serif;letter-spacing:0.08em;color:#2E6B4E;cursor:pointer">{{ rd.logTodayLabel }}</div>
 <div sc-camel-on-click="{{ rd.toggleMenu }}" style="flex:none;width:44px;height:44px;border-radius:999px;display:flex;align-items:center;justify-content:center;gap:3px;cursor:pointer;background:{{ rd.menuBg }};">
 <div style="width:3.5px;height:3.5px;border-radius:9px;background:#1A1712"></div>
@@ -921,6 +965,11 @@
 <div sc-camel-on-click="{{ im.save }}" style="padding:16px;border-radius:11px;background:#2E6B4E;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.06em;color:#F7F1E3;cursor:pointer">{{ im.saveLabel }}</div>
 </div>
 </sc-if>
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:1px;background:rgba(26,23,18,0.15)"></div><div style="font:500 10px/1 Archivo,sans-serif;letter-spacing:0.12em;text-transform:uppercase;color:rgba(26,23,18,0.45)">or paste the recipe text</div><div style="flex:1;height:1px;background:rgba(26,23,18,0.15)"></div></div>
+<textarea value="{{ im.text }}" sc-camel-on-change="{{ im.onText }}" rows="6" placeholder="Select all on the recipe page (or in a chat), copy, and paste here. Works for sites that block the link." style="border:1.5px solid rgba(26,23,18,0.2);border-radius:10px;background:#FFFDF6;padding:12px;font:400 14px/1.5 Archivo,sans-serif;color:#1A1712;resize:none"></textarea>
+<div sc-camel-on-click="{{ im.readText }}" style="padding:15px;border-radius:11px;border:2px solid #1A1712;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:0.06em;color:#1A1712;cursor:pointer">READ PASTED TEXT</div>
+</div>
 <div style="padding:13px;border-radius:10px;background:#F7EBCF;font:400 12.5px/1.5 Archivo,sans-serif;color:#4A3B14;text-wrap:pretty">Paste a link from almost any recipe site. Ingredients are read from the page and sorted into aisles; the link is kept so you can open the original while cooking.</div>
 </div>
 </div>

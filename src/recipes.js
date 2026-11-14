@@ -11,9 +11,11 @@
 //   nut       per serving; est: true means estimated here, not given by the source
 //   tags      used for filtering and the week planner
 //   mealServings  servings that make one meal (e.g. 3 tacos); the planner counts nutrition per meal
+//   autoApply rec ids applied automatically when the recipe first arrives (original stays as v1)
+//   ing h:1   usually on hand: unticked by default and skipped by Shop the week
 //   linkOnly  true when the page couldn't be read; ingredients still to fill in
 //   recs      standing recommendations shown on the recipe:
-//             {id, kind: 'reviews' (what commenters report) | 'check' (from reading the recipe),
+//             {id, kind: 'reviews' (what commenters report) | 'check' (from reading the recipe) | 'mine' (how you make it),
 //              title, text, change?}
 //             change makes the rec appliable as a new version:
 //             {label, ing: [[index, {a,n,s}]], addIng: [{a,n,s}], steps: [[index, text]],
@@ -418,6 +420,153 @@ const RECIPE_LIBRARY=[
    nut:{kcal:0,protein:0,carbs:0,fat:0,fiber:0},
    recs:[
     {id:'r1',kind:'check',title:'Ingredients not filled in yet',text:'This site blocks automated reading, so only the link is saved. Open the original, then save the page as a PDF (Share → Print → Save as PDF) and send it to Claude, or add the ingredients with Write it yourself.'}
+   ],
+      logs:[],adj:[]},
+
+  {id:'lib-rrp-cream-rigatoni',title:'Roasted Red Pepper Cream Rigatoni',
+   source:'Home Chef card (PDF)',url:'',
+   time:'20–30 min',servings:2,tags:['pasta','vegetarian','meal kit','dinner'],
+   ing:[
+    {a:'5 oz',n:'rigatoni',s:'pantry',p:0},
+    {a:'4 oz',n:'kale',s:'produce',p:0},
+    {a:'1 can (15.5 oz)',n:'cannellini beans',s:'canned',p:0},
+    {a:'4 oz',n:'light cream',s:'dairy',p:0},
+    {a:'2 tbsp',n:'roasted red pepper pesto',s:'canned',p:0},
+    {a:'1 tbsp',n:'butter',s:'dairy',p:0},
+    {a:'1 oz',n:'grated Parmesan',s:'dairy',p:0},
+    {a:'½ oz',n:'sliced almonds',s:'snacks',p:0},
+    {a:'1 tsp',n:'seasoned salt blend',s:'pantry',p:0},
+    {a:'2 tsp',n:'olive oil',s:'pantry',p:0},
+    {a:'',n:'salt',s:'pantry',p:0}
+   ],
+   steps:[
+    'Before you start: bring 8 cups water and 2 tsp salt to a boil in a medium pot.',
+    'Cook the pasta: add rigatoni and cook until al dente, 11–13 minutes. Reserve ½ cup pasta water, then drain. Prep while it cooks.',
+    'Prep: stem and coarsely chop the kale. Drain and rinse the beans.',
+    'Kale and beans: heat 2 tsp olive oil in a large non-stick pan over medium-high. Add kale and a pinch of salt; stir until wilted, 2–3 minutes. Stir in beans and seasoned salt until warmed through, 1–2 minutes. Move to a plate; keep the pan on the heat.',
+    'Sauce: add cream to the hot pan and bring to a simmer. Stir in half the Parmesan, the butter and the pesto until the butter melts, 1–2 minutes. Add pasta, 2 tbsp pasta water, and the kale and beans; stir to combine, loosening with more pasta water 1 tbsp at a time. Remove from heat.',
+    'Serve topped with the remaining Parmesan and the almonds.',
+    'Add protein: shrimp in 1 tsp oil over medium-high, 2–3 min then 1–2 min (145°F); or diced chicken in 2 tsp oil, 5–7 min (165°F).'
+   ],
+   nut:{kcal:822,protein:32,carbs:100,fat:34,fiber:0},
+   recs:[
+    {id:'r1',kind:'check',title:'Toast the almonds',text:'The almonds go on raw. A 2-minute toast in the dry pan before the kale makes them much better — just don\'t walk away.',
+     change:{label:'Toast almonds',steps:[[3,'Kale and beans: toast the almonds in the dry large pan over medium, shaking, until golden, 2 minutes; set aside. Add 2 tsp olive oil and raise to medium-high. Add kale and a pinch of salt; stir until wilted, 2–3 minutes. Stir in beans and seasoned salt until warmed through, 1–2 minutes. Move to a plate; keep the pan on the heat.']]}},
+    {id:'r2',kind:'check',title:'Keep the Parmesan smooth',text:'Grated Parmesan can clump if the cream is boiling hard. Simmer gently and stir it in a little at a time.'},
+    {id:'r3',kind:'check',title:'Rich and salty',text:'822 kcal and 1,481 mg sodium per serving, mostly from seasoned salt, pesto and cheese. Skip the seasoned salt if your pesto is salty; the beans already make it a good protein dinner (32 g).'}
+   ],
+   logs:[],adj:[]},
+
+  {id:'lib-cranberry-goat-cheese-spinach-salad',title:'Cranberry & Goat Cheese Spinach Salad',
+   source:'Home Chef card (PDF)',url:'',
+   time:'5 min',servings:2,tags:['salad','vegetarian','no cook','lunch','meal kit'],
+   ing:[
+    {a:'5 oz',n:'baby spinach',s:'produce',p:0},
+    {a:'3 fl oz',n:'Dijon honey mustard dressing',s:'canned',p:0},
+    {a:'1 oz',n:'walnut halves',s:'snacks',p:0},
+    {a:'1 oz',n:'dried cranberries',s:'snacks',p:0},
+    {a:'1 oz',n:'goat cheese',s:'dairy',p:0},
+    {a:'1 oz',n:'crispy beet strips',s:'snacks',p:0}
+   ],
+   steps:[
+    'Rinse and dry the spinach. Toss with the goat cheese (crumbled by hand), walnuts, dried cranberries and dressing.',
+    'Top with the crispy beet strips.',
+    'Add protein: season chicken breast with ¼ tsp salt and pepper and cook in 2 tsp oil over medium-high, 5–7 min (165°F), then slice; or warm pre-cooked roasted chicken 1–2 min.'
+   ],
+   nut:{kcal:423,protein:7,carbs:26,fat:31,fiber:0},
+   recs:[
+    {id:'r1',kind:'check',title:'Not much of an entrée as written',text:'7 g protein per serving. A can of chickpeas (or the card\'s chicken option) makes it a meal.',
+     change:{label:'Add chickpeas',addIng:[{a:'1 can',n:'chickpeas, rinsed and patted dry',s:'canned'}],steps:[[0,'Rinse and dry the spinach. Toss with the goat cheese (crumbled by hand), walnuts, dried cranberries, chickpeas and dressing.']]}},
+    {id:'r2',kind:'check',title:'Go easy on the dressing',text:'3 fl oz for 5 oz of spinach is heavy and drives most of the 31 g fat. Toss with half, then add to taste — baby spinach wilts fast under too much dressing.'},
+    {id:'r3',kind:'check',title:'Beet strips are hard to find',text:'Outside the kit, use beet chips, or skip them and add more walnuts for crunch.'}
+   ],
+   mealServings:1,logs:[],adj:[]},
+
+  {id:'lib-fiesta-wrap',title:'La Fiesta Wrap',
+   source:'Mine — bowl, made as a wrap',url:'',
+   time:'20 min',servings:2,tags:['wrap','lunch','dinner','mine'],
+   ing:[
+    {a:'2 large',n:'flour tortillas (burrito size)',s:'bakery',p:0},
+    {a:'6 oz',n:'cooked chicken and/or steak, sliced',s:'meat',p:0},
+    {a:'⅔ cup',n:'black beans, rinsed',s:'canned',p:0},
+    {a:'½ cup',n:'fire-roasted corn',s:'frozen',p:0},
+    {a:'1½ cups',n:'romaine, shredded',s:'produce',p:0},
+    {a:'1',n:'tomato, diced',s:'produce',p:0},
+    {a:'½',n:'avocado, sliced',s:'produce',p:0},
+    {a:'⅓ cup',n:'shredded white cheddar',s:'dairy',p:0},
+    {a:'3 tbsp',n:'avocado ranch',s:'canned',p:0},
+    {a:'1 handful',n:'tortilla strips',s:'snacks',p:0}
+   ],
+   steps:[
+    'Warm the chicken or steak, black beans and corn (a skillet or microwave is fine). Pat the beans and corn dry so the wrap doesn\'t get soggy.',
+    'Warm the tortillas in a dry pan or microwave for 15–20 seconds so they roll without cracking.',
+    'Down the middle of each tortilla, layer cheddar first (it melts against the warm fillings), then protein, beans and corn, romaine, tomato and avocado. Drizzle with avocado ranch and add the tortilla strips last for crunch.',
+    'Fold in the sides, roll tightly, then toast seam-side down in a dry pan for 1–2 minutes to seal. Halve and serve.'
+   ],
+   nut:{kcal:765,protein:44,carbs:72,fat:34,fiber:12,est:true},
+   recs:[
+    {id:'r1',kind:'check',title:'Amounts and nutrition are estimates',text:'This is built from the bowl\'s ingredient list, so portions are a starting point for 2 wraps — adjust after the first try. Nutrition is estimated with chicken.'},
+    {id:'r2',kind:'check',title:'Keep it from going soggy',text:'Wet fillings (tomato, ranch) go in the middle, not against the tortilla; dice and drain the tomato. If packing for later, keep the ranch and tortilla strips on the side.'},
+    {id:'r3',kind:'check',title:'Make it vegetarian',text:'Swap the chicken/steak for the vegan chorizo tofu crumbles or a second scoop of black beans.'}
+   ],
+   logs:[],adj:[]},
+
+  {id:'lib-garden-goat-grilled-cheese',title:'"Garden Goat" Grilled Cheese',
+   source:'Mine',url:'',
+   time:'45 min (10 with onions made ahead)',servings:1,tags:['sandwich','vegetarian','lunch','mine'],
+   ing:[
+    {a:'2 slices',n:'marble squaw bread (some bakeries now sell it as Sierra bread)',s:'bakery',p:0},
+    {a:'1½ oz',n:'goat cheese, softened',s:'dairy',p:0},
+    {a:'½',n:'yellow onion, thinly sliced (for caramelizing)',s:'produce',p:0},
+    {a:'2 tbsp',n:'sun-dried tomatoes, chopped',s:'canned',p:0},
+    {a:'1 tbsp',n:'arugula pesto',s:'canned',p:0},
+    {a:'1 tbsp',n:'butter (plus 1 tsp oil for the onions)',s:'dairy',p:0}
+   ],
+   steps:[
+    'Caramelize the onion: cook the slices in 1 tsp oil with a pinch of salt over medium-low, stirring now and then, until deep golden and jammy, 30–40 minutes. Add a splash of water if they stick.',
+    'Spread goat cheese on one slice of bread and arugula pesto on the other.',
+    'Layer caramelized onions and sun-dried tomatoes over the goat cheese; close the sandwich.',
+    'Butter the outsides. Cook in a pan over medium-low, covered, 3–4 minutes per side until golden and the goat cheese is warm and soft.'
+   ],
+   nut:{kcal:640,protein:20,carbs:49,fat:42,fiber:4,est:true},
+   recs:[
+    {id:'r1',kind:'check',title:'Onions take 30–40 minutes',text:'Properly caramelized onions can\'t be rushed — high heat just browns them. Make a big batch on the weekend; they keep 5 days in the fridge or freeze in portions.'},
+    {id:'r2',kind:'check',title:'Goat cheese doesn\'t melt or bind',text:'It softens but won\'t hold the sandwich together. A slice of fontina or mozzarella under the goat cheese gives the stretch of a grilled cheese.',
+     change:{label:'Add a melting cheese',addIng:[{a:'1 slice',n:'fontina or mozzarella',s:'dairy'}],steps:[[2,'Layer a slice of fontina or mozzarella, the caramelized onions and sun-dried tomatoes over the goat cheese; close the sandwich.']]}},
+    {id:'r3',kind:'check',title:'Low heat, lid on',text:'Dense marble bread browns before the middle warms. Medium-low with a lid gets it hot through without burning.'}
+   ],
+   logs:[],adj:[]},
+
+  {id:'lib-caprese-sandwich',title:'Caprese Sandwich',
+   source:'tastefullygrace.com',url:'https://tastefullygrace.com/caprese-sandwich/',
+   time:'20 min',servings:4,tags:['sandwich','vegetarian','summer','lunch'],
+   ing:[
+    {a:'4–6',n:'ciabatta rolls',s:'bakery',p:0},
+    {a:'1 lb',n:'fresh mozzarella, sliced',s:'dairy',p:0},
+    {a:'1½ lb',n:'Campari or Roma tomatoes, sliced ½"',s:'produce',p:0},
+    {a:'1 large handful',n:'fresh basil leaves',s:'produce',p:0},
+    {a:'1 large clove',n:'garlic, peeled',s:'produce',p:0},
+    {a:'',n:'thick balsamic glaze',s:'canned',p:0},
+    {a:'',n:'extra-virgin olive oil',s:'pantry',p:0},
+    {a:'',n:'flaky finishing salt',s:'pantry',p:0}
+   ],
+   steps:[
+    'Heat the broiler. Split the rolls lengthwise.',
+    'Broil cut-side up on a baking sheet until warm and just toasting, 2–4 minutes.',
+    'Rub the cut sides with the garlic clove.',
+    'Drizzle each piece with olive oil — generous, not soaked.',
+    'On the bottoms, layer mozzarella, tomato and basil.',
+    'Drizzle with balsamic glaze and sprinkle with salt.',
+    'Close with the tops and halve if you like. Best eaten right away.'
+   ],
+   nut:{kcal:649,protein:31,carbs:43,fat:40,fiber:3},
+   autoApply:['r1'],
+   recs:[
+    {id:'r1',kind:'mine',title:'With pesto (how you make it)',text:'You always have pesto on hand: spread it on the top halves instead of the olive-oil drizzle there. It\'s marked as usually on hand, so it\'s left off the shopping list.',
+     change:{label:'Your pesto version',addIng:[{a:'2–3 tbsp',n:'pesto',s:'canned',h:1}],steps:[[3,'Drizzle the bottoms with olive oil and spread pesto on the tops.']]}},
+    {id:'r2',kind:'check',title:'Salt and drain the tomatoes',text:'Juicy tomato slices soak the bread. Salt them on a towel for 10 minutes and pat dry before layering.'},
+    {id:'r3',kind:'check',title:'Mozzarella as a moisture barrier',text:'Putting the mozzarella directly on the bread (as written) keeps tomato juice off it — keep that order, especially if packing for later.'},
+    {id:'r4',kind:'reviews',title:'Few reviews yet',text:'Rated 5 stars by 8 people, with only one written comment (positive, no changes).'}
    ],
    logs:[],adj:[]}
 ];

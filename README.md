@@ -19,7 +19,17 @@ recipes are saved on the device (browser storage), not on any server.
   matching amounts (2 cloves + 3 cloves = 5 cloves). The nutrition card compares
   the average planned dinner with rough targets (~35% of a day) and suggests
   swaps when protein or fiber run low.
-- **Import** warns when a link or title is already in your recipes.
+- **Favorites**: tap ☆ on a recipe. Favorites sort first, get a ★ filter
+  chip, and come first in the week picker.
+- **Kitchen**: finishing a shopping trip moves checked items here with today's
+  date and a use-by date estimated from typical shelf life. Set the real date
+  from the package, bump it +2 days, or mark it used. *Use it up* suggests
+  recipes that use whatever expires in the next 3 days.
+- **Usually on hand**: library ingredients marked `h:1` (like your pesto) start
+  unticked and are skipped by *Shop the week*.
+- **Import** warns when a link or title is already in your recipes, and can
+  read pasted recipe text (copy the page, or a chat answer) for sites that
+  block links.
 
 ## Adding recipes
 
@@ -31,8 +41,9 @@ device for good. Some sites block automated reading; those are saved as
 link-only until you send a PDF of the page.
 
 **In the app.** Recipes tab → **+ Add** → **Paste a link** reads the recipe
-data many sites embed. When a site blocks it, the app falls back to saving a
-titled link. **Write it yourself** is always available.
+data many sites embed. When a site blocks it, copy the recipe from the page and
+use **Paste the recipe text** on the same screen, or save a titled link.
+**Write it yourself** is always available.
 
 Recipes added in the app are stored only in that browser.
 
