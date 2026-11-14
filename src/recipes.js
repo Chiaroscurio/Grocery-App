@@ -12,7 +12,7 @@
 //   tags      used for filtering and the week planner
 //   mealServings  servings that make one meal (e.g. 3 tacos); the planner counts nutrition per meal
 //   autoApply rec ids applied automatically when the recipe first arrives (original stays as v1)
-//   ing h:1   usually on hand: unticked by default and skipped by Shop the week
+//   rev       bump when correcting a recipe already on devices; their copy is replaced (old one kept in history)
 //   linkOnly  true when the page couldn't be read; ingredients still to fill in
 //   recs      standing recommendations shown on the recipe:
 //             {id, kind: 'reviews' (what commenters report) | 'check' (from reading the recipe) | 'mine' (how you make it),
@@ -562,8 +562,8 @@ const RECIPE_LIBRARY=[
    nut:{kcal:649,protein:31,carbs:43,fat:40,fiber:3},
    autoApply:['r1'],
    recs:[
-    {id:'r1',kind:'mine',title:'With pesto (how you make it)',text:'You always have pesto on hand: spread it on the top halves instead of the olive-oil drizzle there. It\'s marked as usually on hand, so it\'s left off the shopping list.',
-     change:{label:'Your pesto version',addIng:[{a:'2–3 tbsp',n:'pesto',s:'canned',h:1}],steps:[[3,'Drizzle the bottoms with olive oil and spread pesto on the tops.']]}},
+    {id:'r1',kind:'mine',title:'With pesto (how you make it)',text:'Spread pesto on the top halves instead of the olive-oil drizzle there.',
+     change:{label:'Your pesto version',addIng:[{a:'2–3 tbsp',n:'pesto',s:'canned'}],steps:[[3,'Drizzle the bottoms with olive oil and spread pesto on the tops.']]}},
     {id:'r2',kind:'check',title:'Salt and drain the tomatoes',text:'Juicy tomato slices soak the bread. Salt them on a towel for 10 minutes and pat dry before layering.'},
     {id:'r3',kind:'check',title:'Mozzarella as a moisture barrier',text:'Putting the mozzarella directly on the bread (as written) keeps tomato juice off it — keep that order, especially if packing for later.'},
     {id:'r4',kind:'reviews',title:'Few reviews yet',text:'Rated 5 stars by 8 people, with only one written comment (positive, no changes).'}
@@ -572,7 +572,7 @@ const RECIPE_LIBRARY=[
 
   {id:'lib-breakfast-burrito',title:'Breakfast Burrito',
    source:'Mine — from a café menu',url:'',
-   time:'45 min',servings:4,tags:['breakfast','vegetarian','tofu','meal prep','mine'],
+   time:'45 min',servings:4,rev:2,tags:['breakfast','vegetarian','tofu','meal prep','mine'],
    ing:[
     {a:'4 large',n:'flour tortillas (burrito size)',s:'bakery',p:0},
     {a:'1 lb',n:'Yukon Gold potatoes, ½" dice',s:'produce',p:0},
@@ -583,6 +583,8 @@ const RECIPE_LIBRARY=[
     {a:'8 oz',n:'soy chorizo (or the vegan chorizo tofu crumbles)',s:'meat',p:0},
     {a:'1 can (4 oz)',n:'diced green chiles, drained',s:'canned',p:0},
     {a:'1 cup',n:'shredded cheddar or Monterey Jack',s:'dairy',p:0},
+    {a:'1–2',n:'jalapeños, finely diced',s:'produce',p:0},
+    {a:'1',n:'avocado, sliced',s:'produce',p:0},
     {a:'3 Roma',n:'tomatoes (salsa)',s:'produce',p:0},
     {a:'¼',n:'white onion (salsa)',s:'produce',p:0},
     {a:'½ bunch',n:'cilantro (salsa)',s:'produce',p:0},
@@ -595,16 +597,14 @@ const RECIPE_LIBRARY=[
     'Salsa: finely chop the tomatoes, onion and cilantro; mix with the lime juice and a good pinch of salt. Let it sit while you cook.',
     'Chorizo: brown the soy chorizo in a skillet over medium, breaking it up, 5–6 minutes. Move to a bowl.',
     'Tofu scramble: in the same pan, add 1 tbsp oil and crumble in the tofu. Cook over medium-high until the moisture is gone and it starts to brown, 6–8 minutes. Stir in the turmeric, nutritional yeast, green chiles, ½ tsp salt and pepper.',
-    'Warm the tortillas so they fold without cracking. Down the middle of each, layer cheese, potatoes, chorizo and tofu scramble. Fold in the sides and roll tightly.',
+    'Warm the tortillas so they fold without cracking. Down the middle of each, layer cheese, potatoes, chorizo, tofu scramble, fresh jalapeño and avocado. Fold in the sides and roll tightly.',
     'Grill seam-side down in a dry skillet or panini press over medium until golden and sealed, 2–3 minutes per side. Serve with the salsa.'
    ],
-   nut:{kcal:765,protein:34,carbs:83,fat:35,fiber:9,est:true},
+   nut:{kcal:830,protein:35,carbs:87,fat:41,fiber:12,est:true},
    recs:[
-    {id:'r1',kind:'check',title:'The TAG upgrade: jalapeño + avocado',text:'The menu\'s TAG version adds fresh jalapeño and avocado inside the burrito.',
-     change:{label:'TAG version',addIng:[{a:'1',n:'jalapeño, finely diced',s:'produce'},{a:'1',n:'avocado, sliced',s:'produce'}],steps:[[4,'Warm the tortillas so they fold without cracking. Down the middle of each, layer cheese, potatoes, chorizo, tofu scramble, fresh jalapeño and avocado. Fold in the sides and roll tightly.']]}},
-    {id:'r2',kind:'check',title:'Built from a menu description',text:'Amounts, method and nutrition are estimates for 4 burritos — adjust after the first try.'},
+    {id:'r2',kind:'check',title:'Built from a menu description',text:'Amounts, method and nutrition are estimates for 4 burritos (with jalapeño and avocado) — adjust after the first try.'},
     {id:'r3',kind:'check',title:'Dry tofu, crisp potatoes',text:'Watery tofu and soft potatoes are what make breakfast burritos soggy. Press the tofu 15+ minutes and cook it until it squeaks; don\'t crowd the potatoes on the sheet pan; drain the green chiles well.'},
-    {id:'r4',kind:'check',title:'Freezes well',text:'Skip the avocado and salsa, wrap each grilled burrito in foil and freeze up to 2 months. Reheat in the foil at 375°F for 30–35 minutes from frozen, or microwave unwrapped 2–3 minutes then crisp in a pan.'}
+    {id:'r4',kind:'check',title:'Freezes well',text:'Leave out the avocado (add it after reheating) and keep the salsa separate; wrap each grilled burrito in foil and freeze up to 2 months. Reheat in the foil at 375°F for 30–35 minutes from frozen, or microwave unwrapped 2–3 minutes then crisp in a pan.'}
    ],
    logs:[],adj:[]},
 
@@ -616,7 +616,7 @@ const RECIPE_LIBRARY=[
     {a:'2',n:'eggs',s:'dairy',p:0},
     {a:'1 slice',n:'Swiss cheese',s:'dairy',p:0},
     {a:'½',n:'avocado',s:'produce',p:0},
-    {a:'1 tbsp',n:'pesto',s:'canned',p:0,h:1},
+    {a:'1 tbsp',n:'pesto',s:'canned',p:0},
     {a:'2 slices',n:'tomato',s:'produce',p:0},
     {a:'1 handful',n:'mixed greens',s:'produce',p:0},
     {a:'1 tsp',n:'butter',s:'dairy',p:0},

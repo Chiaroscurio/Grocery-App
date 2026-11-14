@@ -25,8 +25,6 @@ recipes are saved on the device (browser storage), not on any server.
   date and a use-by date estimated from typical shelf life. Set the real date
   from the package, bump it +2 days, or mark it used. *Use it up* suggests
   recipes that use whatever expires in the next 3 days.
-- **Usually on hand**: library ingredients marked `h:1` (like your pesto) start
-  unticked and are skipped by *Shop the week*.
 - **Import** warns when a link or title is already in your recipes, and can
   read pasted recipe text (copy the page, or a chat answer) for sites that
   block links.

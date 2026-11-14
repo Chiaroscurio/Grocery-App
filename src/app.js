@@ -334,9 +334,17 @@ class Component extends DCLogic {
     let recipes=(d.recipes||this.state.recipes).map(r=>{
       const L=libById[r.id]; if(!L) return r;
       if(r.linkOnly&&!L.linkOnly) return {...clone(L),logs:r.logs||[],adj:r.adj||[]};
+      if((L.rev||1)>(r.rev||1)){
+        // The library corrected this recipe: take its content, keep the old copy in history.
+        const base=withV1(r), nr={...base,ing:clone(L.ing),steps:[...L.steps],time:L.time,servings:L.servings,nut:clone(L.nut),rev:L.rev};
+        const keep={}; Object.keys(base.recState||{}).forEach(k=>{ if((L.recs||[]).some(c=>c.id===k)&&base.recState[k].st!=='applied') keep[k]=base.recState[k]; });
+        r={...nr,recState:keep,versions:[...base.versions,snap(nr,'Recipe updated')]};
+      }
       return {...r,recs:clone(L.recs||[]),tags:L.tags||r.tags,mealServings:L.mealServings,linkOnly:L.linkOnly,url:r.url||L.url};
     });
     const have=new Set(recipes.map(r=>r.id));
+    const noH=list=>(list||[]).map(g=>{ if(!g||!('h' in g)) return g; const {h,...rest}=g; return rest; });
+    recipes=recipes.map(r=>({...r,ing:noH(r.ing),versions:(r.versions||[]).map(v=>({...v,ing:noH(v.ing)}))}));
     recipes=[...recipes,...LIB.filter(r=>!have.has(r.id)&&!removedLib.includes(r.id)).map(r=>{
       let x=withV1(clone(r));
       (r.autoApply||[]).forEach(rid=>{const c=(r.recs||[]).find(z=>z.id===rid); if(!c||!c.change) return;
@@ -426,7 +434,7 @@ class Component extends DCLogic {
 
   openRecipe(id){
     const r=this.recipe(id); const sel={};
-    r.ing.forEach((g,i)=>{sel[id+'-'+i]=!g.h;});
+    r.ing.forEach((g,i)=>{sel[id+'-'+i]=true;});
     this.set({view:'recipe',activeRecipe:id,ingSel:sel,justAdded:'',recipeMenu:false,confirmDelete:false,viewVer:null});
   }
   deleteRecipe=()=>{
@@ -452,7 +460,7 @@ class Component extends DCLogic {
     return v?{...r,ing:v.ing,steps:v.steps,time:v.time,servings:v.servings,adj:v.adj||[]}:r;
   }
   updRecipe(id,fn){ this.setState(s=>({recipes:s.recipes.map(r=>r.id===id?fn(r):r)})); }
-  allSelected(r){ const o={}; r.ing.forEach((g,i)=>{o[r.id+'-'+i]=!g.h;}); return o; }
+  allSelected(r){ const o={}; r.ing.forEach((g,i)=>{o[r.id+'-'+i]=true;}); return o; }
   applyRec(rec){
     const id=this.state.activeRecipe;
     this.updRecipe(id,r=>{
@@ -516,11 +524,11 @@ class Component extends DCLogic {
   };
   shopWeek=()=>{
     const s=this.state, entries=[];
-    s.plan.forEach(rid=>{ const r=this.recipe(rid); if(!r) return; r.ing.forEach(g=>{ if(!g.h&&!STAPLE_RE.test(g.n.trim())) entries.push({g,title:r.title}); }); });
+    s.plan.forEach(rid=>{ const r=this.recipe(rid); if(!r) return; r.ing.forEach(g=>{ if(!STAPLE_RE.test(g.n.trim())) entries.push({g,title:r.title}); }); });
     if(!entries.length) return this.set({weekMsg:'Plan a few dinners first.'});
     const before=s.items.length, items=addIngredientsToItems(s.items,entries);
     const added=items.length-before, merged=entries.length-added;
-    this.set({items,weekMsg:added+' items added to the list'+(merged?', '+merged+' merged with ones already there':'')+'. Salt, pepper, water and things you usually have on hand were skipped.'});
+    this.set({items,weekMsg:added+' items added to the list'+(merged?', '+merged+' merged with ones already there':'')+'. Salt, pepper and water skipped.'});
   };
 
   submitCook=()=>this.set({view:'fixes',cookApplied:[...this.state.cookIssues]});
@@ -675,8 +683,7 @@ class Component extends DCLogic {
       delBg:s.confirmDelete?RED:'transparent',delColor:s.confirmDelete?CREAM:RED,del:this.deleteRecipe,
       ingredients:ar.ing.map((g,i)=>{
         const key=ar.id+'-'+i,on=s.ingSel[key]!==false;
-        const vtag=orig?tagFor(ingText(g),orig.ing[i]?ingText(orig.ing[i]):'',i,orig.ing.length):'';
-        const tag=[vtag,g.h?'ON HAND':''].filter(Boolean).join(' · ');
+        const tag=orig?tagFor(ingText(g),orig.ing[i]?ingText(orig.ing[i]):'',i,orig.ing.length):'';
         return {tag,hasTag:!!tag,text:(g.a?g.a+' ':'')+g.n,icon:this.secIcon(g.s,17),priceLabel:g.p?money(g.p):'',on,
           boxBg:on?RED:'transparent',boxBorder:on?RED:'rgba(26,23,18,0.35)',
           toggle:()=>this.setState(st=>({ingSel:{...st.ingSel,[key]:st.ingSel[key]===false}}))};
