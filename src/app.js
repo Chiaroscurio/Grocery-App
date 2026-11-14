@@ -167,6 +167,87 @@ function parseRecipeHtml(html,url){
   };
 }
 
+// ---- Versions, recommendations, duplicates, planning ----
+const clone=x=>JSON.parse(JSON.stringify(x));
+const todayStr=()=>new Date().toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
+const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const DAY_NAMES=['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'];
+// Rough dinner targets: about 35% of a day, protein a bit higher.
+const DINNER={kcal:700,protein:25,carbs:95,fat:27,fiber:10};
+function snap(r,label,extra){
+  return {id:uid('v'),label,date:todayStr(),ing:clone(r.ing),steps:[...r.steps],time:r.time,servings:r.servings,adj:clone(r.adj||[]),...(extra||{})};
+}
+function withV1(r){
+  if(r.versions&&r.versions.length) return r;
+  return {...r,versions:[{id:'v1',label:(r.url||String(r.id).startsWith('lib-'))?'Original — as written':'Original',date:todayStr(),
+    ing:clone(r.ing),steps:[...r.steps],time:r.time,servings:r.servings,adj:clone(r.adj||[])}],recState:r.recState||{}};
+}
+// Recommendation changes reference ingredient/step positions in the original;
+// they only replace or append, so positions stay valid across versions.
+function applyChange(r,ch){
+  const ing=r.ing.map(g=>({...g}));
+  (ch.ing||[]).forEach(([i,g])=>{ if(ing[i]) ing[i]={...ing[i],...g}; });
+  (ch.addIng||[]).forEach(g=>ing.push({p:0,...g}));
+  const steps=[...r.steps];
+  (ch.steps||[]).forEach(([i,t])=>{ if(i<steps.length) steps[i]=t; });
+  (ch.addStep||[]).forEach(t=>steps.push(t));
+  return {...r,ing,steps,time:ch.time||r.time,servings:ch.servings||r.servings};
+}
+const normUrl=u=>{try{const x=new URL(/^https?:/i.test(u)?u:'https://'+u);return x.hostname.replace(/^www\./,'')+x.pathname.replace(/\/+$/,'').toLowerCase();}catch(e){return '';}};
+const normTitle=t=>(t||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+function findDuplicate(recipes,url,title){
+  const u=url?normUrl(url):'', t=normTitle(title);
+  return recipes.find(r=>(u&&r.url&&normUrl(r.url)===u)||(t&&normTitle(r.title)===t))||null;
+}
+const STAPLE_RE=/^(water|salt|pepper|black pepper|kosher salt|sea salt|salt and pepper|salt & pepper|pepper, to taste|salt and pepper, to taste)$/i;
+const itemKey=n=>n.toLowerCase().split(',')[0].replace(/\([^)]*\)/g,'').replace(/\s+/g,' ').trim();
+// "2 cloves" + "3 cloves" -> "5 cloves"; different units stay side by side.
+const FRAC={'½':0.5,'¼':0.25,'¾':0.75,'⅓':1/3,'⅔':2/3,'⅛':0.125};
+function parseAmt(a){
+  const m=/^(\d+(?:\.\d+)?)?\s*([½¼¾⅓⅔⅛])?(?:\s*\/\s*(\d+))?\s+(.+)$|^(\d+(?:\.\d+)?)?\s*([½¼¾⅓⅔⅛])?$/.exec(a.trim());
+  if(!m) return null;
+  const whole=m[1]||m[5], fr=m[2]||m[6];
+  if(!whole&&!fr) return null;
+  let v=(whole?parseFloat(whole):0)+(fr?FRAC[fr]:0);
+  if(m[3]&&whole&&!fr) v=parseFloat(whole)/parseFloat(m[3]);
+  return {v,u:(m[4]||'').toLowerCase().replace(/^(\w+?)(es|s)?\b/,'$1').trim()};
+}
+function fmtAmt(v){
+  const w=Math.floor(v+1e-9), f=v-w, near=x=>Math.abs(f-x)<0.04;
+  const fs=near(0)?'':near(0.25)?'¼':near(0.5)?'½':near(0.75)?'¾':near(1/3)?'⅓':near(2/3)?'⅔':String(Math.round(f*100)/100).slice(1);
+  return (w?String(w):'')+fs||'0';
+}
+function combineAmounts(existing,add){
+  const parts=existing.split(' + '), b=parseAmt(add);
+  if(b){
+    for(let i=0;i<parts.length;i++){
+      const a=parseAmt(parts[i]);
+      if(a&&a.u===b.u){
+        const unit=parts[i].trim().replace(/^[\d.\/\s½¼¾⅓⅔⅛]+/,'');
+        parts[i]=fmtAmt(a.v+b.v)+(unit?' '+unit:'');
+        return parts.join(' + ');
+      }
+    }
+  }
+  return existing+' + '+add;
+}
+// Add recipe ingredients to the list, merging repeats into one line.
+function addIngredientsToItems(items,entries){
+  const out=items.map(i=>({...i}));
+  entries.forEach(({g,title})=>{
+    const k=itemKey(g.n);
+    const hit=out.find(i=>!i.checked&&itemKey(i.name)===k);
+    if(hit){
+      if(g.a) hit.unit=hit.unit?combineAmounts(hit.unit,g.a):g.a;
+      if(title&&!(hit.from||'').split(', ').includes(title)) hit.from=hit.from?hit.from+', '+title:title;
+    } else out.push({id:uid('i'),name:g.n.charAt(0).toUpperCase()+g.n.slice(1),qty:1,unit:g.a,sec:g.s,checked:false,from:title,price:g.p||0});
+  });
+  return out;
+}
+const cookable=r=>!r.linkOnly&&r.ing&&r.ing.length>0;
+const mealNut=r=>{const m=r.mealServings||1,n=r.nut||{};return {kcal:(n.kcal||0)*m,protein:(n.protein||0)*m,carbs:(n.carbs||0)*m,fat:(n.fat||0)*m,fiber:(n.fiber||0)*m};};
+const pickRandom=a=>a.length?a[Math.floor(Math.random()*a.length)]:null;
+
 class Component extends DCLogic {
   constructor(p){
     super(p);
@@ -176,6 +257,7 @@ class Component extends DCLogic {
       ingSel:{}, justAdded:'', recipeMenu:false, confirmDelete:false, confirmClear:false,
       cookRating:4, cookIssues:[], cookNote:'', cookApplied:[],
       imUrl:'', imState:'idle', imDraft:null, imErr:'', suggestion:null,
+      viewVer:null, showDismissed:false, recQuery:'', plan:[null,null,null,null,null,null,null], pickDay:null, pickQuery:'', weekMsg:'',
       mnTitle:'', mnServings:'', mnTime:'', mnSteps:'',
       mnRows:[{id:'r1',amount:'',name:''},{id:'r2',amount:'',name:''},{id:'r3',amount:'',name:''}],
       sections:[
@@ -193,11 +275,21 @@ class Component extends DCLogic {
     let d={};
     try{const raw=localStorage.getItem('marketlist.v2');if(raw) d=JSON.parse(raw)||{};}catch(e){}
     // Merge in library recipes this device hasn't seen yet (and hasn't deleted).
-    const recipes=d.recipes||this.state.recipes, removedLib=d.removedLib||[];
+    const LIB=typeof RECIPE_LIBRARY!=='undefined'?RECIPE_LIBRARY:[];
+    const libById={}; LIB.forEach(r=>{libById[r.id]=r;});
+    const removedLib=d.removedLib||[];
+    // Library-owned details (recommendations, tags) refresh on every load;
+    // a link-only recipe is replaced once the library has its ingredients.
+    let recipes=(d.recipes||this.state.recipes).map(r=>{
+      const L=libById[r.id]; if(!L) return r;
+      if(r.linkOnly&&!L.linkOnly) return {...clone(L),logs:r.logs||[],adj:r.adj||[]};
+      return {...r,recs:clone(L.recs||[]),tags:L.tags||r.tags,mealServings:L.mealServings,linkOnly:L.linkOnly,url:r.url||L.url};
+    });
     const have=new Set(recipes.map(r=>r.id));
-    const fresh=(typeof RECIPE_LIBRARY!=='undefined'?RECIPE_LIBRARY:[]).filter(r=>!have.has(r.id)&&!removedLib.includes(r.id));
+    recipes=[...recipes,...LIB.filter(r=>!have.has(r.id)&&!removedLib.includes(r.id)).map(clone)].map(withV1);
+    const plan=Array.isArray(d.plan)&&d.plan.length===7?d.plan.map(id=>recipes.some(r=>r.id===id)?id:null):this.state.plan;
     this.setState({items:d.items||this.state.items,sections:d.sections||this.state.sections,
-      recipes:[...recipes,...fresh.map(r=>JSON.parse(JSON.stringify(r)))],dayLog:d.dayLog||this.state.dayLog,removedLib});
+      recipes,dayLog:d.dayLog||this.state.dayLog,removedLib,plan});
     this._ts=e=>{const t=e.touches[0];this._sx=t.clientX;this._sy=t.clientY;};
     this._te=e=>{
       if(this._sx==null) return;
@@ -209,7 +301,7 @@ class Component extends DCLogic {
     window.addEventListener('touchend',this._te,{passive:true});
   }
   componentDidUpdate(){
-    try{const s=this.state;localStorage.setItem('marketlist.v2',JSON.stringify({items:s.items,sections:s.sections,recipes:s.recipes,dayLog:s.dayLog,removedLib:s.removedLib||[]}));}catch(e){}
+    try{const s=this.state;localStorage.setItem('marketlist.v2',JSON.stringify({items:s.items,sections:s.sections,recipes:s.recipes,dayLog:s.dayLog,removedLib:s.removedLib||[],plan:s.plan}));}catch(e){}
   }
   componentWillUnmount(){
     window.removeEventListener('touchstart',this._ts);
@@ -274,7 +366,7 @@ class Component extends DCLogic {
   openRecipe(id){
     const r=this.recipe(id); const sel={};
     r.ing.forEach((g,i)=>{sel[id+'-'+i]=true;});
-    this.set({view:'recipe',activeRecipe:id,ingSel:sel,justAdded:'',recipeMenu:false,confirmDelete:false});
+    this.set({view:'recipe',activeRecipe:id,ingSel:sel,justAdded:'',recipeMenu:false,confirmDelete:false,viewVer:null});
   }
   deleteRecipe=()=>{
     if(!this.state.confirmDelete) return this.set({confirmDelete:true});
@@ -284,26 +376,92 @@ class Component extends DCLogic {
   };
   addRecipeToList=()=>{
     const r=this.recipe(this.state.activeRecipe);
-    const picked=r.ing.filter((g,i)=>this.state.ingSel[r.id+'-'+i]);
+    const disp=this.displayed(r);
+    const picked=disp.ing.filter((g,i)=>this.state.ingSel[r.id+'-'+i]!==false);
     if(!picked.length) return;
     this.setState(s=>{
-      const items=[...s.items];
-      picked.forEach(g=>{
-        const hit=items.find(i=>i.name.toLowerCase()===g.n.toLowerCase());
-        if(hit){ hit.from=hit.from||r.title; }
-        else items.push({id:uid('i'),name:g.n.charAt(0).toUpperCase()+g.n.slice(1),qty:1,unit:g.a,sec:g.s,checked:false,from:r.title,price:g.p||0});
-      });
+      const items=addIngredientsToItems(s.items,picked.map(g=>({g,title:r.title})));
       return {items,justAdded:picked.length+(picked.length===1?' ingredient added to the list.':' ingredients added to the list.')};
     });
+  };
+
+  // The recipe as currently shown: the latest, or an older version being viewed.
+  displayed(r){
+    const v=this.state.viewVer&&(r.versions||[]).find(x=>x.id===this.state.viewVer);
+    return v?{...r,ing:v.ing,steps:v.steps,time:v.time,servings:v.servings,adj:v.adj||[]}:r;
+  }
+  updRecipe(id,fn){ this.setState(s=>({recipes:s.recipes.map(r=>r.id===id?fn(r):r)})); }
+  allSelected(r){ const o={}; r.ing.forEach((g,i)=>{o[r.id+'-'+i]=true;}); return o; }
+  applyRec(rec){
+    const id=this.state.activeRecipe;
+    this.updRecipe(id,r=>{
+      const nr=applyChange(r,rec.change);
+      const v=snap(nr,'Applied: '+rec.change.label);
+      return {...nr,versions:[...(r.versions||[]),v],recState:{...(r.recState||{}),[rec.id]:{st:'applied',ver:v.id}}};
+    });
+    const r=applyChange(this.recipe(id),rec.change);
+    this.set({viewVer:null,ingSel:this.allSelected(r)});
+  }
+  pinRec(rec){
+    this.updRecipe(this.state.activeRecipe,r=>{
+      const nr={...r,adj:[{id:uid('a'),text:rec.title+' — '+rec.text+' (pinned '+todayStr()+')'},...r.adj]};
+      const v=snap(nr,'Pinned note: '+rec.title);
+      return {...nr,versions:[...(r.versions||[]),v],recState:{...(r.recState||{}),[rec.id]:{st:'pinned',ver:v.id}}};
+    });
+    this.set({viewVer:null});
+  }
+  setRecState(rec,st){
+    this.updRecipe(this.state.activeRecipe,r=>{const rs={...(r.recState||{})}; if(st) rs[rec.id]={st}; else delete rs[rec.id]; return {...r,recState:rs};});
+  }
+  restoreVersion(vid){
+    const id=this.state.activeRecipe;
+    this.updRecipe(id,r=>{
+      const idx=r.versions.findIndex(x=>x.id===vid); if(idx<0) return r;
+      const v=r.versions[idx];
+      const nr={...r,ing:clone(v.ing),steps:[...v.steps],time:v.time,servings:v.servings,adj:clone(v.adj||[])};
+      const later=new Set(r.versions.slice(idx+1).map(x=>x.id));
+      const rs={...(r.recState||{})}; Object.keys(rs).forEach(k=>{ if(rs[k].ver&&later.has(rs[k].ver)) delete rs[k]; });
+      return {...nr,recState:rs,versions:[...r.versions,snap(nr,'Restored v'+(idx+1)+' ('+v.label+')')]};
+    });
+    const r=this.recipe(id), v=r.versions.find(x=>x.id===vid);
+    this.set({viewVer:null,ingSel:this.allSelected({...r,ing:v.ing})});
+  }
+  surpriseMe=()=>{ const r=pickRandom(this.state.recipes.filter(cookable)); if(r) this.openRecipe(r.id); };
+  // ---- week plan ----
+  setPlan(i,rid){ this.setState(s=>{const plan=[...s.plan]; plan[i]=rid; return {plan,weekMsg:''};}); }
+  randomFor(plan,i){
+    const pool=this.state.recipes.filter(cookable);
+    const unused=pool.filter(r=>!plan.includes(r.id));
+    const r=pickRandom(unused.length?unused:pool.filter(r=>r.id!==plan[i]));
+    return r?r.id:plan[i];
+  }
+  reroll(i){ this.setPlan(i,this.randomFor(this.state.plan,i)); }
+  fillWeek=()=>{
+    const plan=[...this.state.plan];
+    plan.forEach((rid,i)=>{ if(!rid) plan[i]=this.randomFor(plan,i); });
+    this.set({plan,weekMsg:''});
+  };
+  shopWeek=()=>{
+    const s=this.state, entries=[];
+    s.plan.forEach(rid=>{ const r=this.recipe(rid); if(!r) return; r.ing.forEach(g=>{ if(!STAPLE_RE.test(g.n.trim())) entries.push({g,title:r.title}); }); });
+    if(!entries.length) return this.set({weekMsg:'Plan a few dinners first.'});
+    const before=s.items.length, items=addIngredientsToItems(s.items,entries);
+    const added=items.length-before, merged=entries.length-added;
+    this.set({items,weekMsg:added+' items added to the list'+(merged?', '+merged+' merged with ones already there':'')+'. Salt, pepper and water skipped.'});
   };
 
   submitCook=()=>this.set({view:'fixes',cookApplied:[...this.state.cookIssues]});
   saveCook=()=>{
     const rid=this.state.activeRecipe;
     this.setState(s=>({
-      recipes:s.recipes.map(r=>r.id!==rid?r:{...r,
-        logs:[{id:uid('l'),date:'Today',rating:s.cookRating,note:s.cookNote||'No notes.',issues:[...s.cookIssues]},...r.logs],
-        adj:[...s.cookApplied.filter(k=>FIXBOOK[k]).map(k=>({id:uid('a'),text:FIXBOOK[k].adj+' — added today'})),...r.adj]}),
+      recipes:s.recipes.map(r=>{
+        if(r.id!==rid) return r;
+        const fixes=s.cookApplied.filter(k=>FIXBOOK[k]);
+        const nr={...r,
+          logs:[{id:uid('l'),date:todayStr(),rating:s.cookRating,note:s.cookNote||'No notes.',issues:[...s.cookIssues]},...r.logs],
+          adj:[...fixes.map(k=>({id:uid('a'),text:FIXBOOK[k].adj+' — added '+todayStr()})),...r.adj]};
+        return fixes.length?{...nr,versions:[...(r.versions||[]),snap(nr,'Cook log fixes: '+fixes.map(k=>FIXBOOK[k].label).join(', '))]}:nr;
+      }),
       view:'recipe',cookRating:4,cookIssues:[],cookNote:'',cookApplied:[]
     }));
   };
@@ -327,7 +485,7 @@ class Component extends DCLogic {
     const host=(d.url.replace(/^https?:\/\//,'').split('/')[0]||'web').replace(/^www\./,'');
     const r={id:uid('rc'),title:(d.title||'').trim()||host,source:host,url:d.url,time:d.time||'—',servings:d.servings||4,
       ing:d.ing,steps:d.steps,nut:d.nut,logs:[],adj:[]};
-    this.setState(s=>({recipes:[r,...s.recipes],view:null,imUrl:'',imState:'idle',imDraft:null,imErr:'',tab:'recipes'}));
+    this.setState(s=>({recipes:[withV1(r),...s.recipes],view:null,imUrl:'',imState:'idle',imDraft:null,imErr:'',tab:'recipes'}));
   };
   saveManual=()=>{
     const t=this.state.mnTitle.trim(); if(!t) return;
@@ -336,7 +494,7 @@ class Component extends DCLogic {
       ing:rows.map(x=>({a:x.amount,n:x.name,s:guessSection(x.name),p:0})),
       steps:this.state.mnSteps.split('\n').map(x=>x.trim()).filter(Boolean),
       nut:{kcal:0,protein:0,carbs:0,fat:0,fiber:0},logs:[],adj:[]};
-    this.setState(s=>({recipes:[r,...s.recipes],view:null,mnTitle:'',mnServings:'',mnTime:'',mnSteps:'',
+    this.setState(s=>({recipes:[withV1(r),...s.recipes],view:null,mnTitle:'',mnServings:'',mnTime:'',mnSteps:'',
       mnRows:[{id:uid('r'),amount:'',name:''},{id:uid('r'),amount:'',name:''},{id:uid('r'),amount:'',name:''}],tab:'recipes'}));
   };
 
@@ -373,9 +531,9 @@ class Component extends DCLogic {
     const estTotal=money(s.items.reduce((a,i)=>a+lineCost(i),0));
     const cartTotal=money(s.items.filter(i=>i.checked).reduce((a,i)=>a+lineCost(i),0));
 
-    const tabs=[['list','LIST'],['recipes','RECIPES'],['today','TODAY']].map(([id,label])=>{
+    const tabs=[['list','LIST'],['recipes','RECIPES'],['week','WEEK'],['today','TODAY']].map(([id,label])=>{
       const on=s.tab===id;
-      return {label,sub:id==='list'?total+' items':id==='recipes'?s.recipes.length+' saved':'kcal',
+      return {label,sub:id==='list'?total+' items':id==='recipes'?s.recipes.length+' saved':id==='week'?s.plan.filter(Boolean).length+'/7 planned':'kcal',
         line:on?RED:'transparent',color:on?RED:'rgba(26,23,18,0.45)',subColor:on?'rgba(185,58,38,0.7)':'rgba(26,23,18,0.3)',
         go:()=>this.set({tab:id,view:null,shopping:false})};
     });
@@ -409,36 +567,71 @@ class Component extends DCLogic {
     }));
 
     const recipeCost=r=>r.ing.reduce((a,g)=>a+(g.p||0),0);
-    const recipeCards=s.recipes.map(r=>{
+    const q=s.recQuery.trim().toLowerCase();
+    const matches=r=>!q||[r.title,r.source,(r.tags||[]).join(' '),r.ing.map(g=>g.n).join(' ')].join(' ').toLowerCase().includes(q);
+    const tagCount={}; s.recipes.forEach(r=>(r.tags||[]).forEach(t=>{tagCount[t]=(tagCount[t]||0)+1;}));
+    const tagChips=Object.keys(tagCount).sort((a,b)=>tagCount[b]-tagCount[a]||a.localeCompare(b)).slice(0,12).map(t=>{
+      const on=q===t; return {label:t,bg:on?INK:'transparent',color:on?CREAM:INK,go:()=>this.set({recQuery:on?'':t})};});
+    const recipeCards=s.recipes.filter(matches).map(r=>{
       const last=r.logs[0], c=recipeCost(r);
       return {id:r.id,title:r.title,kcal:r.nut.kcal?String(r.nut.kcal):'—',
         cost:c?money(c):'—',meta:r.time+' · '+r.servings+' servings · '+r.source,
-        dots:this.dots(last?last.rating:0),lastNote:last?'cooked '+last.date:'not cooked yet',
+        dots:this.dots(last?last.rating:0),lastNote:r.linkOnly?'link only — ingredients to add':last?'cooked '+last.date:'not cooked yet',
         tileBg:last&&last.rating>=4?'#F7EBCF':'#FFFDF6',open:()=>this.openRecipe(r.id)};
     });
 
-    const ar=this.recipe(s.activeRecipe)||s.recipes[0]||{id:'x',title:'—',ing:[],steps:[],logs:[],adj:[],nut:DV,time:'',servings:1,source:''};
-    const selCount=ar.ing.filter((g,i)=>s.ingSel[ar.id+'-'+i]).length;
+    const base=this.recipe(s.activeRecipe)||s.recipes[0]||{id:'x',title:'—',ing:[],steps:[],logs:[],adj:[],nut:DV,time:'',servings:1,source:'',versions:[]};
+    const ar=this.displayed(base);
+    const vers=base.versions||[], orig=vers[0];
+    const viewingOld=!!s.viewVer&&vers.length>0&&s.viewVer!==vers[vers.length-1].id;
+    const viewIdx=viewingOld?vers.findIndex(v=>v.id===s.viewVer):vers.length-1;
+    const ingText=g=>(g.a?g.a+' ':'')+g.n;
+    const tagFor=(cur,o,i,len)=>viewingOld||!orig?'':(i>=len?'ADDED':cur!==o?'REVISED':'');
+    const recState=base.recState||{};
+    const verNum=vid=>{const i=vers.findIndex(v=>v.id===vid);return i<0?'':'v'+(i+1);};
+    const selCount=ar.ing.filter((g,i)=>s.ingSel[ar.id+'-'+i]!==false).length;
     const arCost=recipeCost(ar);
     const inDay=s.dayLog.some(d=>d.rid===ar.id);
     const rd={
       title:ar.title,meta:ar.time+' · '+ar.servings+' servings · '+ar.source,
-      hasUrl:!!ar.url,openUrl:()=>{if(ar.url) window.open(ar.url,'_blank','noopener');},
+      hasUrl:!!base.url,openUrl:()=>{if(base.url) window.open(base.url,'_blank','noopener');},
       menuOpen:s.recipeMenu,menuBg:s.recipeMenu?'rgba(26,23,18,0.1)':'transparent',
       toggleMenu:()=>this.set({recipeMenu:!s.recipeMenu,confirmDelete:false}),
       delLabel:s.confirmDelete?'TAP AGAIN TO DELETE':'DELETE THIS RECIPE',
       delBg:s.confirmDelete?RED:'transparent',delColor:s.confirmDelete?CREAM:RED,del:this.deleteRecipe,
       ingredients:ar.ing.map((g,i)=>{
-        const key=ar.id+'-'+i,on=!!s.ingSel[key];
-        return {text:(g.a?g.a+' ':'')+g.n,icon:this.secIcon(g.s,17),priceLabel:g.p?money(g.p):'',on,
+        const key=ar.id+'-'+i,on=s.ingSel[key]!==false;
+        const tag=orig?tagFor(ingText(g),orig.ing[i]?ingText(orig.ing[i]):'',i,orig.ing.length):'';
+        return {tag,hasTag:!!tag,text:(g.a?g.a+' ':'')+g.n,icon:this.secIcon(g.s,17),priceLabel:g.p?money(g.p):'',on,
           boxBg:on?RED:'transparent',boxBorder:on?RED:'rgba(26,23,18,0.35)',
-          toggle:()=>this.setState(st=>({ingSel:{...st.ingSel,[key]:!st.ingSel[key]}}))};
+          toggle:()=>this.setState(st=>({ingSel:{...st.ingSel,[key]:st.ingSel[key]===false}}))};
       }),
       toggleAllLabel:selCount===ar.ing.length?'NONE':'ALL',
       toggleAll:()=>{const all=selCount===ar.ing.length;const o={};ar.ing.forEach((g,i)=>{o[ar.id+'-'+i]=!all;});this.set({ingSel:o});},
       addLabel:selCount?'ADD '+selCount+' TO LIST':'PICK INGREDIENTS',
       addToList:this.addRecipeToList,justAdded:!!s.justAdded,addedMsg:s.justAdded,
-      steps:ar.steps.map((t,i)=>({n:String(i+1),text:t})),
+      steps:ar.steps.map((t,i)=>{const tag=orig?tagFor(t,orig.steps[i]||'',i,orig.steps.length):'';return {n:String(i+1),text:t,tag,hasTag:!!tag};}),
+      linkOnly:!!base.linkOnly,
+      viewingOld,verBanner:viewingOld?'Viewing v'+(viewIdx+1)+' · '+vers[viewIdx].label+' · '+vers[viewIdx].date:'',
+      backToCurrent:()=>this.set({viewVer:null}),restoreThis:()=>this.restoreVersion(s.viewVer),
+      versions:vers.map((v,i)=>{const cur=i===vers.length-1, viewing=viewingOld?v.id===s.viewVer:cur;
+        return {n:'v'+(i+1),label:v.label,date:v.date,current:cur,viewing:viewing&&!cur,
+          bg:viewing?'#F7EBCF':'#FFFDF6',border:viewing?'#D3A32E':'rgba(26,23,18,0.16)',
+          open:()=>this.set({viewVer:cur?null:v.id})};}).reverse(),
+      hasRecs:(base.recs||[]).length>0,
+      hasDismissed:(base.recs||[]).some(c=>(recState[c.id]||{}).st==='dismissed'),
+      dismissedLabel:s.showDismissed?'HIDE DISMISSED':'SHOW DISMISSED',
+      toggleDismissed:()=>this.set({showDismissed:!s.showDismissed}),
+      recs:(base.recs||[]).filter(c=>s.showDismissed||(recState[c.id]||{}).st!=='dismissed').map(c=>{
+        const st=recState[c.id], reviews=c.kind==='reviews';
+        const status=!st?'':st.st==='applied'?'✓ Applied as '+verNum(st.ver)+' — undo from history':st.st==='pinned'?'✓ Pinned to your adjustments':'Dismissed · tap to restore';
+        return {kindLabel:reviews?'What reviewers say':'From reading the recipe',accent:reviews?'#3F7A8C':'#8A6A14',
+          title:c.title,text:c.text,fade:st&&st.st==='dismissed'?0.55:1,
+          canApply:!st&&!!c.change&&!viewingOld,applyLabel:c.change?'Apply: '+c.change.label:'',apply:()=>this.applyRec(c),
+          canPin:!st&&!c.change&&!viewingOld,pin:()=>this.pinRec(c),
+          canDismiss:!st,dismiss:()=>this.setRecState(c,'dismissed'),
+          hasStatus:!!st,status,statusClick:()=>{ if(st&&st.st==='dismissed') this.setRecState(c,null); }};
+      }),
       hasAdjustments:ar.adj.length>0,adjustments:ar.adj,
       costPerServing:arCost?money(arCost/ar.servings)+' / serving':'no prices yet',
       nutrition:[['Calories','kcal',''],['Protein','protein','g'],['Carbs','carbs','g'],['Fat','fat','g'],['Fiber','fiber','g']]
@@ -484,7 +677,59 @@ class Component extends DCLogic {
       meta:imd?[imd.time,imd.servings+' servings',imd.ing.length?imd.ing.length+' ingredients':''].filter(Boolean).join(' · '):'',
       hasIng:!!imd&&imd.ing.length>0,
       ingredients:(imd?imd.ing:[]).map(g=>({text:(g.a?g.a+' ':'')+g.n,sectionName:this.secName(g.s)})),
+      dup:null,
       save:this.saveImport,saveLabel:imd&&imd.ing.length?'SAVE TO RECIPES':'SAVE AS LINK'
+    };
+
+    const dupR=findDuplicate(s.recipes,s.imUrl.trim(),imd?imd.title:'');
+    im.hasDup=!!dupR; im.dupText=dupR?'Already in your recipes: “'+dupR.title+'”. Saving again makes a second copy.':'';
+    im.openDup=()=>{ if(dupR) this.openRecipe(dupR.id); };
+    if(dupR) im.saveLabel='SAVE ANYWAY';
+
+    // ---- week ----
+    const planned=s.plan.map(id=>this.recipe(id)).filter(Boolean);
+    const withNut=planned.filter(r=>r.nut&&r.nut.kcal>0);
+    const avg=k=>{const list=k==='fiber'?withNut.filter(r=>r.nut.fiber>0):withNut; return list.length?list.reduce((a,r)=>a+mealNut(r)[k],0)/list.length:0;};
+    const fiberN=withNut.filter(r=>r.nut.fiber>0).length;
+    const NUTS=[['Calories','kcal','',GREEN],['Protein','protein','g',GREEN],['Carbs','carbs','g',MUST],['Fat','fat','g',RED],['Fiber','fiber','g','#8A6A14']];
+    const wkBars=withNut.length?NUTS.map(([label,k,u,bg])=>{const a=Math.round(avg(k)),pct=a/DINNER[k];
+      const flag=pct<0.7?' · low':pct>1.35?' · high':'';
+      return {label,value:(k==='fiber'&&!fiberN?'not listed':a+u+' of ~'+DINNER[k]+u+flag),pct:Math.min(100,Math.round(pct*100))+'%',bg:pct<0.7?RED:pct>1.35?MUST:bg};}):[];
+    const swaps=[];
+    if(withNut.length){
+      const unplanned=s.recipes.filter(r=>cookable(r)&&r.nut&&r.nut.kcal>0&&!s.plan.includes(r.id));
+      [['protein','Protein','g'],['fiber','Fiber','g']].forEach(([k,label,u])=>{
+        if(k==='fiber'&&!fiberN) return;
+        const a=avg(k); if(a>=DINNER[k]*0.75) return;
+        const lowDay=s.plan.map((id,i)=>({i,r:this.recipe(id)})).filter(x=>x.r&&x.r.nut&&x.r.nut.kcal>0&&(k!=='fiber'||x.r.nut.fiber>0))
+          .sort((x,y)=>mealNut(x.r)[k]-mealNut(y.r)[k])[0];
+        const best=unplanned.filter(r=>k!=='fiber'||r.nut.fiber>0).sort((x,y)=>mealNut(y)[k]-mealNut(x)[k])[0];
+        if(!lowDay||!best) return;
+        const gain=Math.round(mealNut(best)[k]-mealNut(lowDay.r)[k]); if(gain<=2) return;
+        swaps.push({text:label+' is low this week (about '+Math.round(a)+u+' a dinner vs ~'+DINNER[k]+u+'). Swap '+DAYS[lowDay.i]+'’s '+lowDay.r.title+' for '+best.title+' (+'+gain+u+').',
+          go:()=>this.setPlan(lowDay.i,best.id)});
+      });
+      if(avg('kcal')>DINNER.kcal*1.35) swaps.push({text:'Dinners average about '+Math.round(avg('kcal'))+' kcal — on the heavy side. The meal kits are the richest; a soup night balances the week.',go:null});
+    }
+    const wk={
+      days:s.plan.map((id,i)=>{const r=this.recipe(id);
+        return {day:DAYS[i],has:!!r,title:r?r.title:'Tap to choose',titleColor:r?INK:'rgba(26,23,18,0.4)',
+          sub:r?[r.time,(r.nut&&r.nut.kcal?Math.round(mealNut(r).kcal)+' kcal':'')].filter(Boolean).join(' · '):'or shuffle →',
+          main:()=>this.set({view:'pickmeal',pickDay:i,pickQuery:''}),reroll:()=>this.reroll(i),clear:()=>this.setPlan(i,null)};}),
+      fill:this.fillWeek,shop:this.shopWeek,clearAll:()=>this.set({plan:[null,null,null,null,null,null,null],weekMsg:''}),
+      hasMsg:!!s.weekMsg,msg:s.weekMsg,
+      hasBars:wkBars.length>0,bars:wkBars,noBars:!wkBars.length,
+      nutNote:withNut.length?'Average per planned dinner, from '+withNut.length+' of '+planned.length+' with nutrition info'+(fiberN<withNut.length?' (fiber listed for '+fiberN+')':'')+'. Tacos and spring rolls count as 3 per meal.':'',
+      hasSwaps:swaps.length>0,swaps:swaps.map(x=>({text:x.text,canSwap:!!x.go,go:x.go||(()=>{})}))
+    };
+    const pq=s.pickQuery.trim().toLowerCase();
+    const pk={
+      title:s.pickDay!=null?DAY_NAMES[s.pickDay]:'',query:s.pickQuery,onQuery:e=>this.set({pickQuery:e.target.value}),
+      surprise:()=>{ if(s.pickDay==null) return; this.setPlan(s.pickDay,this.randomFor(s.plan,s.pickDay)); this.closeSheet(); },
+      items:s.recipes.filter(cookable).filter(r=>!pq||[r.title,(r.tags||[]).join(' ')].join(' ').toLowerCase().includes(pq)).map(r=>{
+        const on=s.pickDay!=null&&s.plan[s.pickDay]===r.id;
+        return {title:r.title,meta:[r.time,r.nut&&r.nut.kcal?Math.round(mealNut(r).kcal)+' kcal':'',r.nut&&r.nut.protein?Math.round(mealNut(r).protein)+'g protein':''].filter(Boolean).join(' · '),
+          border:on?RED:'rgba(26,23,18,0.16)',pick:()=>{ this.setPlan(s.pickDay,r.id); this.closeSheet(); }};})
     };
 
     const mn={
@@ -513,8 +758,8 @@ class Component extends DCLogic {
     return {
       tabList:s.tab==='list',tabRecipes:s.tab==='recipes',tabToday:s.tab==='today',
       shopping:s.shopping,notShopping:!s.shopping,showNutrition,
-      headKicker:s.tab==='list'?(total+' items · '+s.sections.length+' aisles'):s.tab==='recipes'?'Saved and importable':new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'}),
-      headTitle:s.tab==='list'?'GROCERIES':s.tab==='recipes'?'RECIPES':'TODAY',
+      headKicker:s.tab==='list'?(total+' items · '+s.sections.length+' aisles'):s.tab==='recipes'?'Saved and importable':s.tab==='week'?(s.plan.filter(Boolean).length+' of 7 dinners planned'):new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'}),
+      headTitle:s.tab==='list'?'GROCERIES':s.tab==='recipes'?'RECIPES':s.tab==='week'?'THIS WEEK':'TODAY',
       tabs,groups,listEmpty:groups.length===0,shopGroups,
       draft:s.draft,onDraft:e=>this.set({draft:e.target.value}),
       onDraftKey:e=>{if(e.key==='Enter')this.addItem();},
@@ -542,7 +787,9 @@ class Component extends DCLogic {
       clearAllSubColor:s.confirmClear?'rgba(247,241,227,0.75)':'rgba(26,23,18,0.55)',
       secRows,newSec:s.newSec,onNewSec:e=>this.set({newSec:e.target.value}),
       addSec:()=>{const n=s.newSec.trim();if(!n)return;this.setState(st=>({sections:[...st.sections,{id:uid('s'),name:n}],newSec:''}));},
-      recipeCards,rd,ck,fx,im,mn,sg,ed,
+      recipeCards,rd,ck,fx,im,mn,sg,ed,wk,pk,tagChips,
+      recQuery:s.recQuery,onRecQuery:e=>this.set({recQuery:e.target.value}),surpriseMe:this.surpriseMe,recEmpty:recipeCards.length===0,
+      tabWeek:s.tab==='week',ovPickMeal:s.view==='pickmeal',
       openNewRecipe:()=>this.set({view:'new'}),
       openImport:()=>this.set({view:'import'}),
       openManual:()=>this.set({view:'manual'}),

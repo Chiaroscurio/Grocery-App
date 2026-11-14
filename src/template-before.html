@@ -290,6 +290,18 @@
 
 <sc-if value="{{ tabRecipes }}">
 <div style="display:flex;flex-direction:column;gap:12px;padding:16px 16px 18px">
+<div style="display:flex;gap:8px;align-items:center">
+<input value="{{ recQuery }}" sc-camel-on-change="{{ onRecQuery }}" placeholder="Search recipes, tags, ingredients" style="flex:1;min-width:0;padding:12px 13px;border:1.5px solid rgba(26,23,18,0.2);border-radius:10px;background:#FFFDF6;font:400 14px/1.2 Archivo,sans-serif;color:#1A1712">
+<div sc-camel-on-click="{{ surpriseMe }}" style="flex:none;padding:13px 13px;border-radius:10px;background:#1A1712;font-family:'Bebas Neue',sans-serif;font-size:17px;line-height:1;letter-spacing:0.06em;color:#F7F1E3;cursor:pointer">SURPRISE ME</div>
+</div>
+<div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;margin:0 -16px;padding-left:16px;padding-right:16px">
+<sc-for list="{{ tagChips }}" as="c" hint-placeholder-count="6">
+<div sc-camel-on-click="{{ c.go }}" style="flex:none;padding:7px 11px;border-radius:999px;border:1.5px solid #1A1712;background:{{ c.bg }};font:600 10.5px/1 Archivo,sans-serif;letter-spacing:0.08em;text-transform:uppercase;color:{{ c.color }};cursor:pointer;white-space:nowrap">{{ c.label }}</div>
+</sc-for>
+</div>
+<sc-if value="{{ recEmpty }}">
+<div style="padding:26px 16px;border:1.5px dashed rgba(26,23,18,0.22);border-radius:10px;text-align:center;font:400 13px/1.5 Archivo,sans-serif;color:rgba(26,23,18,0.45)">No recipes match.</div>
+</sc-if>
 <sc-for list="{{ recipeCards }}" as="r" hint-placeholder-count="4">
 <div sc-camel-on-click="{{ r.open }}" style="border:2px solid #1A1712;border-radius:12px;background:#FFFDF6;overflow:hidden;cursor:pointer">
 <div style="display:flex;align-items:stretch">
@@ -311,6 +323,64 @@
 </div>
 </div>
 </sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ tabWeek }}">
+<div style="display:flex;flex-direction:column;gap:16px;padding:16px 16px 20px">
+<div style="display:flex;gap:8px">
+<div sc-camel-on-click="{{ wk.fill }}" style="flex:1;padding:14px 8px;border-radius:10px;background:#1A1712;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.06em;color:#F7F1E3;cursor:pointer">FILL EMPTY DAYS</div>
+<div sc-camel-on-click="{{ wk.shop }}" style="flex:1;padding:14px 8px;border-radius:10px;background:#B93A26;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.06em;color:#F7F1E3;cursor:pointer">SHOP THE WEEK</div>
+</div>
+<sc-if value="{{ wk.hasMsg }}">
+<div style="padding:11px 13px;border-radius:9px;background:#E2EDE5;border:1.5px solid #2E6B4E;font:500 12.5px/1.45 Archivo,sans-serif;color:#23543D">{{ wk.msg }}</div>
+</sc-if>
+<div style="display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ wk.days }}" as="d" hint-placeholder-count="7">
+<div style="display:flex;align-items:stretch;border:2px solid #1A1712;border-radius:11px;background:#FFFDF6;overflow:hidden">
+<div style="flex:none;width:52px;border-right:2px solid #1A1712;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.04em;color:#1A1712;background:#F0E7D3">{{ d.day }}</div>
+<div sc-camel-on-click="{{ d.main }}" style="flex:1;min-width:0;padding:11px 12px;display:flex;flex-direction:column;gap:4px;cursor:pointer">
+<div style="font:500 14.5px/1.25 Archivo,sans-serif;color:{{ d.titleColor }};">{{ d.title }}</div>
+<div style="font:400 10.5px/1.25 Archivo,sans-serif;letter-spacing:0.06em;text-transform:uppercase;color:rgba(26,23,18,0.45)">{{ d.sub }}</div>
+</div>
+<div sc-camel-on-click="{{ d.reroll }}" style="flex:none;width:46px;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="22" height="22" sc-camel-view-box="0 0 24 24" fill="none" stroke="#1A1712" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5"></path><path d="M4 20L21 3"></path><path d="M21 16v5h-5"></path><path d="M15 15l6 6"></path><path d="M4 4l5 5"></path></svg></div>
+<sc-if value="{{ d.has }}">
+<div sc-camel-on-click="{{ d.clear }}" style="flex:none;width:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;font:600 15px/1 Archivo,sans-serif;color:rgba(26,23,18,0.4)">✕</div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+<div style="border:2px solid #1A1712;border-radius:12px;background:#FFFDF6;padding:16px;display:flex;flex-direction:column;gap:12px">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:0.05em;color:#1A1712">DINNERS VS TARGET</div>
+<sc-if value="{{ wk.noBars }}">
+<div style="font:400 13px/1.5 Archivo,sans-serif;color:rgba(26,23,18,0.5)">Plan some dinners to see how the week adds up.</div>
+</sc-if>
+<sc-if value="{{ wk.hasBars }}">
+<sc-for list="{{ wk.bars }}" as="b" hint-placeholder-count="5">
+<div style="display:flex;flex-direction:column;gap:5px">
+<div style="display:flex;justify-content:space-between;gap:8px">
+<div style="font:600 11px/1 Archivo,sans-serif;letter-spacing:0.1em;text-transform:uppercase;color:#1A1712">{{ b.label }}</div>
+<div style="font:500 11px/1 Archivo,sans-serif;font-variant-numeric:tabular-nums;color:rgba(26,23,18,0.5)">{{ b.value }}</div>
+</div>
+<div style="height:8px;border-radius:999px;background:rgba(26,23,18,0.09);overflow:hidden">
+<div style="height:100%;border-radius:999px;width:{{ b.pct }};background:{{ b.bg }};"></div>
+</div>
+</div>
+</sc-for>
+<div style="font:400 11.5px/1.5 Archivo,sans-serif;color:rgba(26,23,18,0.5)">{{ wk.nutNote }}</div>
+</sc-if>
+<sc-if value="{{ wk.hasSwaps }}">
+<sc-for list="{{ wk.swaps }}" as="w" hint-placeholder-count="1">
+<div style="display:flex;flex-direction:column;gap:9px;padding:12px 13px;border-radius:10px;background:#F7EBCF;border-left:4px solid #D3A32E">
+<div style="font:400 13px/1.5 Archivo,sans-serif;color:#4A3B14;text-wrap:pretty">{{ w.text }}</div>
+<sc-if value="{{ w.canSwap }}">
+<div sc-camel-on-click="{{ w.go }}" style="align-self:flex-start;display:inline-block;padding:9px 12px;border-radius:8px;background:#1A1712;font:600 11px/1 Archivo,sans-serif;letter-spacing:0.08em;text-transform:uppercase;color:#F7F1E3;cursor:pointer">Make the swap</div>
+</sc-if>
+</div>
+</sc-for>
+</sc-if>
+</div>
+<div sc-camel-on-click="{{ wk.clearAll }}" style="align-self:center;padding:10px;font:600 11px/1 Archivo,sans-serif;letter-spacing:0.08em;text-transform:uppercase;color:rgba(26,23,18,0.45);cursor:pointer">Clear the week</div>
 </div>
 </sc-if>
 
@@ -377,7 +447,7 @@
 </div>
 </sc-if>
 
-<div style="flex:none;display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid rgba(26,23,18,0.14);background:#F7F1E3">
+<div style="flex:none;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;border-top:1px solid rgba(26,23,18,0.14);background:#F7F1E3">
 <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
 <div sc-camel-on-click="{{ t.go }}" style="padding:11px 4px 13px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;border-top:3px solid transparent;border-top-color:{{ t.line }};">
 <div style="font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:0.07em;color:{{ t.color }};">{{ t.label }}</div>
@@ -561,6 +631,19 @@
 </sc-if>
 <div style="flex:1;overflow:auto;padding:14px 16px 20px;display:flex;flex-direction:column;gap:20px">
 
+<sc-if value="{{ rd.viewingOld }}">
+<div style="display:flex;flex-direction:column;gap:10px;padding:13px;border-radius:10px;background:#1A1712">
+<div style="font:500 12.5px/1.45 Archivo,sans-serif;color:#F7F1E3">{{ rd.verBanner }}</div>
+<div style="display:flex;gap:8px">
+<div sc-camel-on-click="{{ rd.backToCurrent }}" style="flex:1;padding:11px 6px;border-radius:8px;border:1.5px solid #F7F1E3;text-align:center;font:600 11px/1 Archivo,sans-serif;letter-spacing:0.08em;text-transform:uppercase;color:#F7F1E3;cursor:pointer">Back to current</div>
+<div sc-camel-on-click="{{ rd.restoreThis }}" style="flex:1;padding:11px 6px;border-radius:8px;background:#F7F1E3;text-align:center;font:600 11px/1 Archivo,sans-serif;letter-spacing:0.08em;text-transform:uppercase;color:#1A1712;cursor:pointer">Make this current</div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ rd.linkOnly }}">
+<div style="padding:12px 13px;border-radius:10px;background:#F7EBCF;border-left:4px solid #D3A32E;font:400 13px/1.5 Archivo,sans-serif;color:#4A3B14">Only the link is saved for this one. Tap Open original to cook from the site; see Worth knowing below for how to fill it in.</div>
+</sc-if>
+
 <div style="display:flex;flex-direction:column;gap:9px">
 <div style="display:flex;align-items:center;gap:8px">
 <div style="font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:0.05em;color:#1A1712">INGREDIENTS</div>
@@ -574,7 +657,7 @@
 <svg width="13" height="13" sc-camel-view-box="0 0 16 16" fill="none"><path d="M3 8.6l3.2 3.2L13 4.8" stroke="#F7F1E3" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
 </sc-if>
 </div>
-<div style="flex:1;min-width:0;font:500 15px/1.3 Archivo,sans-serif;color:#1A1712">{{ g.text }}</div>
+<div style="flex:1;min-width:0;font:500 15px/1.3 Archivo,sans-serif;color:#1A1712">{{ g.text }}</div><sc-if value="{{ g.hasTag }}"><div style="flex:none;padding:3px 6px;border-radius:5px;background:#E2EDE5;font:700 8.5px/1 Archivo,sans-serif;letter-spacing:0.1em;color:#23543D">{{ g.tag }}</div></sc-if>
 <div style="flex:none;display:flex;align-items:center;gap:7px">
 <div style="font:600 11px/1 Archivo,sans-serif;font-variant-numeric:tabular-nums;color:rgba(26,23,18,0.45)">{{ g.priceLabel }}</div>
 <div style="display:flex;align-items:center">{{ g.icon }}</div>
@@ -586,6 +669,31 @@
 <div style="padding:11px 13px;border-radius:9px;background:#E2EDE5;border:1.5px solid #2E6B4E;font:500 12.5px/1.45 Archivo,sans-serif;color:#23543D">{{ rd.addedMsg }}</div>
 </sc-if>
 </div>
+
+<sc-if value="{{ rd.hasRecs }}">
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:center;gap:8px">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:0.05em;color:#1A1712">WORTH KNOWING</div>
+<div style="flex:1;height:2px;background:rgba(26,23,18,0.14)"></div>
+<sc-if value="{{ rd.hasDismissed }}">
+<div sc-camel-on-click="{{ rd.toggleDismissed }}" style="padding:8px 4px;font:600 10px/1 Archivo,sans-serif;letter-spacing:0.08em;color:rgba(26,23,18,0.5);cursor:pointer">{{ rd.dismissedLabel }}</div>
+</sc-if>
+</div>
+<sc-for list="{{ rd.recs }}" as="c" hint-placeholder-count="2">
+<div style="display:flex;flex-direction:column;gap:7px;padding:13px;border:1.5px solid rgba(26,23,18,0.16);border-left:4px solid {{ c.accent }};border-radius:10px;background:#FFFDF6;opacity:{{ c.fade }};">
+<div style="font:700 9.5px/1 Archivo,sans-serif;letter-spacing:0.12em;text-transform:uppercase;color:{{ c.accent }};">{{ c.kindLabel }}</div>
+<div style="font:600 15px/1.3 Archivo,sans-serif;color:#1A1712">{{ c.title }}</div>
+<div style="font:400 13px/1.5 Archivo,sans-serif;color:#312A20;text-wrap:pretty">{{ c.text }}</div>
+<div style="display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-top:2px">
+<sc-if value="{{ c.canApply }}"><div sc-camel-on-click="{{ c.apply }}" style="padding:9px 12px;border-radius:8px;background:#2E6B4E;font:600 11px/1 Archivo,sans-serif;letter-spacing:0.08em;text-transform:uppercase;color:#F7F1E3;cursor:pointer">{{ c.applyLabel }}</div></sc-if>
+<sc-if value="{{ c.canPin }}"><div sc-camel-on-click="{{ c.pin }}" style="padding:8px 12px;border-radius:8px;border:1.5px solid #1A1712;font:600 11px/1 Archivo,sans-serif;letter-spacing:0.08em;text-transform:uppercase;color:#1A1712;cursor:pointer">Pin as note</div></sc-if>
+<sc-if value="{{ c.canDismiss }}"><div sc-camel-on-click="{{ c.dismiss }}" style="padding:9px 6px;font:600 11px/1 Archivo,sans-serif;letter-spacing:0.08em;text-transform:uppercase;color:rgba(26,23,18,0.45);cursor:pointer">Dismiss</div></sc-if>
+<sc-if value="{{ c.hasStatus }}"><div sc-camel-on-click="{{ c.statusClick }}" style="font:600 11px/1.35 Archivo,sans-serif;letter-spacing:0.05em;text-transform:uppercase;color:#2E6B4E;cursor:pointer">{{ c.status }}</div></sc-if>
+</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
 
 <sc-if value="{{ rd.hasAdjustments }}">
 <div style="display:flex;flex-direction:column;gap:8px;padding:14px;border-radius:11px;background:#F7EBCF;border-left:4px solid #D3A32E">
@@ -607,7 +715,7 @@
 <sc-for list="{{ rd.steps }}" as="s" hint-placeholder-count="4">
 <div style="display:flex;gap:12px;align-items:flex-start">
 <div style="flex:none;width:24px;height:24px;border-radius:999px;background:#1A1712;display:flex;align-items:center;justify-content:center;font:600 12px/1 Archivo,sans-serif;color:#F7F1E3">{{ s.n }}</div>
-<div style="flex:1;font:400 14px/1.55 Archivo,sans-serif;color:#312A20;text-wrap:pretty">{{ s.text }}</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:5px;align-items:flex-start"><div style="font:400 14px/1.55 Archivo,sans-serif;color:#312A20;text-wrap:pretty">{{ s.text }}</div><sc-if value="{{ s.hasTag }}"><div style="flex:none;padding:3px 6px;border-radius:5px;background:#E2EDE5;font:700 8.5px/1 Archivo,sans-serif;letter-spacing:0.1em;color:#23543D">{{ s.tag }}</div></sc-if></div>
 </div>
 </sc-for>
 </div>
@@ -661,6 +769,25 @@
 <div style="padding:16px;border:1.5px dashed rgba(26,23,18,0.22);border-radius:10px;font:400 13px/1.5 Archivo,sans-serif;color:rgba(26,23,18,0.45);text-align:center">Not cooked yet.</div>
 </sc-if>
 <div sc-camel-on-click="{{ rd.openCook }}" style="padding:16px;border-radius:11px;border:2px solid #1A1712;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.06em;color:#1A1712;cursor:pointer">LOG A COOK</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="display:flex;align-items:center;gap:8px">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:0.05em;color:#1A1712">HISTORY</div>
+<div style="flex:1;height:2px;background:rgba(26,23,18,0.14)"></div>
+</div>
+<sc-for list="{{ rd.versions }}" as="v" hint-placeholder-count="2">
+<div sc-camel-on-click="{{ v.open }}" style="display:flex;align-items:center;gap:11px;padding:11px 13px;border:1.5px solid {{ v.border }};border-radius:10px;background:{{ v.bg }};cursor:pointer">
+<div style="flex:none;min-width:24px;font-family:'Bebas Neue',sans-serif;font-size:19px;line-height:1;color:#1A1712">{{ v.n }}</div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+<div style="font:500 13.5px/1.3 Archivo,sans-serif;color:#1A1712">{{ v.label }}</div>
+<div style="font:400 10.5px/1 Archivo,sans-serif;letter-spacing:0.06em;text-transform:uppercase;color:rgba(26,23,18,0.45)">{{ v.date }}</div>
+</div>
+<sc-if value="{{ v.current }}"><div style="flex:none;padding:5px 8px;border-radius:999px;background:#E2EDE5;font:700 9px/1 Archivo,sans-serif;letter-spacing:0.1em;color:#23543D">CURRENT</div></sc-if>
+<sc-if value="{{ v.viewing }}"><div style="flex:none;padding:5px 8px;border-radius:999px;background:#1A1712;font:700 9px/1 Archivo,sans-serif;letter-spacing:0.1em;color:#F7F1E3">VIEWING</div></sc-if>
+</div>
+</sc-for>
+<div style="font:400 12px/1.5 Archivo,sans-serif;color:rgba(26,23,18,0.5)">Tap a version to see it. The original is always kept, and restoring an older version adds a new entry instead of erasing anything.</div>
 </div>
 
 </div>
@@ -768,6 +895,12 @@
 <input value="{{ im.url }}" sc-camel-on-change="{{ im.onUrl }}" placeholder="https://…" style="padding:14px;border:1.5px solid rgba(26,23,18,0.2);border-radius:10px;background:#FFFDF6;font:400 14px/1.2 Archivo,sans-serif;color:#1A1712">
 <div sc-camel-on-click="{{ im.fetch }}" style="padding:16px;border-radius:11px;background:#B93A26;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.06em;color:#F7F1E3;cursor:pointer">{{ im.fetchLabel }}</div>
 </div>
+<sc-if value="{{ im.hasDup }}">
+<div style="display:flex;flex-direction:column;gap:8px;padding:11px 13px;border-radius:9px;background:#F7EBCF;border:1.5px solid #D3A32E">
+<div style="font:500 12.5px/1.45 Archivo,sans-serif;color:#4A3B14">{{ im.dupText }}</div>
+<div sc-camel-on-click="{{ im.openDup }}" style="align-self:flex-start;display:inline-block;font:600 11px/1 Archivo,sans-serif;letter-spacing:0.08em;text-transform:uppercase;color:#8A6A14;cursor:pointer;text-decoration:underline">Open the saved one</div>
+</div>
+</sc-if>
 <sc-if value="{{ im.loading }}">
 <div style="padding:24px;text-align:center;font:500 13px/1.5 Archivo,sans-serif;color:rgba(26,23,18,0.5)">Reading the page…</div>
 </sc-if>
@@ -789,6 +922,25 @@
 </div>
 </sc-if>
 <div style="padding:13px;border-radius:10px;background:#F7EBCF;font:400 12.5px/1.5 Archivo,sans-serif;color:#4A3B14;text-wrap:pretty">Paste a link from almost any recipe site. Ingredients are read from the page and sorted into aisles; the link is kept so you can open the original while cooking.</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ ovPickMeal }}">
+<div style="position:absolute;inset:0;z-index:7;background:#F7F1E3;display:flex;flex-direction:column">
+<div style="flex:none;padding:8px 14px 13px;border-bottom:3px solid #1A1712;display:flex;align-items:center;gap:8px">
+<div sc-camel-on-click="{{ closeSheet }}" style="flex:none;width:46px;height:46px;margin-left:-6px;border-radius:999px;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="24" height="24" sc-camel-view-box="0 0 24 24" fill="none" stroke="#1A1712" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg></div>
+<div style="flex:1;min-width:0;font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:0.02em;color:#1A1712">{{ pk.title }}</div>
+</div>
+<div style="flex:1;overflow:auto;padding:16px 16px 20px;display:flex;flex-direction:column;gap:10px">
+<div sc-camel-on-click="{{ pk.surprise }}" style="padding:15px;border-radius:11px;background:#1A1712;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.06em;color:#F7F1E3;cursor:pointer">SURPRISE ME</div>
+<input value="{{ pk.query }}" sc-camel-on-change="{{ pk.onQuery }}" placeholder="Search by name or tag" style="padding:13px;border:1.5px solid rgba(26,23,18,0.2);border-radius:10px;background:#FFFDF6;font:400 14px/1.2 Archivo,sans-serif;color:#1A1712">
+<sc-for list="{{ pk.items }}" as="r" hint-placeholder-count="5">
+<div sc-camel-on-click="{{ r.pick }}" style="padding:12px 14px;border:1.5px solid {{ r.border }};border-radius:10px;background:#FFFDF6;display:flex;flex-direction:column;gap:4px;cursor:pointer">
+<div style="font:500 15px/1.25 Archivo,sans-serif;color:#1A1712">{{ r.title }}</div>
+<div style="font:400 10.5px/1.2 Archivo,sans-serif;letter-spacing:0.06em;text-transform:uppercase;color:rgba(26,23,18,0.45)">{{ r.meta }}</div>
+</div>
+</sc-for>
 </div>
 </div>
 </sc-if>
